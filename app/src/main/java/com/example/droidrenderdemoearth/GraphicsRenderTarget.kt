@@ -37,12 +37,6 @@ class GraphicsRenderTarget<T>(var frameBufferSpriteInstance: GraphicsSpriteInsta
             frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, width.toFloat(), height.toFloat())
             frameBufferSpriteInstance.projectionMatrix.ortho(width, height)
             frameBufferSpriteInstance.modelViewMatrix.reset()
-
-
-            //frameBufferSpriteInstance.modelViewMatrix.scale(1.0f, -1.0f, 1.0f)
-            //frameBufferSpriteInstance.modelViewMatrix.translation(width / 2.0f, height / 2.0f, 0.0f)
-
-
         }
     }
 
@@ -52,34 +46,13 @@ class GraphicsRenderTarget<T>(var frameBufferSpriteInstance: GraphicsSpriteInsta
         }
     }
 
-    /*
-
-    var frameBufferIndex: Int
-    var width: Int
-    var height: Int
-    val texture: GraphicsTexture
-
-    constructor(context: Context?, graphics: GraphicsLibrary?, fileName: String) : this(graphics,
-        FileUtils.readFileFromAssetAsBitmap(context, fileName), fileName) {
-
-    }
-
-    constructor(graphics: GraphicsLibrary?, bitmap: Bitmap?, fileName: String? = null) {
-        this.graphics = graphics
-        this.fileName = fileName
-
-        width = 0
-        height = 0
-        textureIndex = -1
-
-        graphics?.let { _graphics ->
-            bitmap?.let { _bitmap ->
-                width = _bitmap.width
-                height = _bitmap.height
-                textureIndex = _graphics.textureGenerate(_bitmap)
-            }
+    fun render(width: Int, height: Int, scale: Int) {
+        graphicsPipeline?.let { _graphicsPipeline ->
+            frameBufferSpriteInstance.projectionMatrix.ortho(width, height)
+            frameBufferSpriteInstance.modelViewMatrix.reset()
+            frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, (width / 2).toFloat(), (height / 2).toFloat())
+            frameBufferSpriteInstance.render(_graphicsPipeline.programSprite2D)
         }
     }
 
-    */
 }

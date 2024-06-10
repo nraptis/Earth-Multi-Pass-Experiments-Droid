@@ -10,7 +10,11 @@ class Earth(var graphics: GraphicsLibrary?,
     init {
         //this.graphics = graphics
         //this.graphicsPipeline = graphicsPipeline
+
         earthModelData = EarthModelData(graphics?.widthf ?: 320.0f,graphics?.heightf ?: 320.0f)
+
+        //earthModelData = EarthModelData((graphics?.widthf ?: 320.0f) * 1.5f,(graphics?.heightf ?: 320.0f) * 2.0f)
+
         earthModelDataStrips = Array<EarthModelDataStrip>(EarthModelData.tileCountV) {
             EarthModelDataStrip(earthModelData, it + 1, graphics, graphicsPipeline, texture)
         }

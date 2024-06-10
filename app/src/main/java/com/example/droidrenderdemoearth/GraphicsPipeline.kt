@@ -11,9 +11,6 @@ class GraphicsPipeline(context: Context) {
     val context: Context?
         get() = contextRef.get()
 
-
-
-
     val functionSprite2DVertex: Int
     val functionSprite2DFragment: Int
     var programSprite2D: ShaderProgramSprite2D
@@ -36,18 +33,6 @@ class GraphicsPipeline(context: Context) {
     val functionBlurVerticalFragment: Int
     var programBlurHorizontal: ShaderProgramBlurHorizontal
     var programBlurVertical: ShaderProgramBlurVertical
-
-
-    //ShaderProgramBlurHorizontal
-
-    /*
-    shape_2d_fragment.glsl
-    shape_2d_vertex.glsl
-    shape_3d_fragment.glsl
-    shape_3d_vertex.glsl
-
-     */
-
 
     init {
 

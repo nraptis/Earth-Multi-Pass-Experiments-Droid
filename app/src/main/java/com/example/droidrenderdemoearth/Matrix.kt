@@ -120,7 +120,7 @@ data class Matrix(
     }
 
     fun ortho(width: Float, height: Float) {
-        ortho(0.0f, width, height, 0.0f, -1024.0f, 0.0f)
+        ortho(0.0f, width, height, 0.0f, -1024.0f, 1024.0f)
     }
 
     fun perspective(fovy: Float, aspect: Float, nearZ: Float, farZ: Float) {

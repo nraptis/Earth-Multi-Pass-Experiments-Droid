@@ -118,16 +118,21 @@ class GraphicsRenderer(var scene: EarthScene?,
 
 
         renderTargetPreBloom.load(graphics, graphicsPipeline, width, height)
-
         renderTargetBloom.load(graphics, graphicsPipeline, width, height)
 
 
         //renderTargetBlur1.load(graphics, graphicsPipeline, width / 4, height / 4)
         //        renderTargetBlur2.load(graphics, graphicsPipeline, width / 4, height / 4)
         //
-        renderTargetBlur1.load(graphics, graphicsPipeline, width, height)
-        renderTargetBlur2.load(graphics, graphicsPipeline, width, height)
+        //renderTargetBlur1.load(graphics, graphicsPipeline, width, height)
+        //renderTargetBlur2.load(graphics, graphicsPipeline, width, height)
 
+        val blurScale = 2
+        val blurWidth = width / blurScale
+        val blurHeight = height / blurScale
+
+        renderTargetBlur1.load(graphics, graphicsPipeline, blurWidth, blurHeight)
+        renderTargetBlur2.load(graphics, graphicsPipeline, blurWidth, blurHeight)
 
         //blurInstance1.load(graphics, renderTargetBlur1.frameBufferTexture)
         //blurInstance2.load(graphics, renderTargetBlur2.frameBufferTexture)
@@ -148,66 +153,9 @@ class GraphicsRenderer(var scene: EarthScene?,
         scene?.loadComplete()
 
 
-
-
-
-        /*
-        frameBufferTextureIndex = graphics.textureGenerate(width, height)
-
-        val frameBufferHandle = IntArray(1)
-        GLES20.glGenFramebuffers(1, frameBufferHandle, 0)
-        frameBufferIndex = frameBufferHandle[0]
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferIndex)
-        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, frameBufferTextureIndex, 0)
-        frameBufferTexture.load(graphics, frameBufferTextureIndex, width, height)
-        frameBufferSpriteInstance.load(graphics, frameBufferTexture)
-
-
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-
-         */
-
-
-        /*
-
-
-        vertexBuffer = GraphicsArrayBuffer(graphics)
-        indexBuffer = graphics?.indexBufferGenerate(indices) ?: IntBuffer.allocate(0)
-
-
-
-        val frameBufferHandle = IntArray(1)
-        GLES20.glGenFramebuffers(1, frameBufferHandle, 0)
-        frameBufferIndex = frameBufferHandle[0]
-
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferIndex)
-        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, junkText, 0)
-
-
-
-        //val renderBufferHandle = IntArray(1)
-        //GLES20.glGenFramebuffers(1, renderBufferHandle, 0)
-        //renderBufferIndex = renderBufferHandle[0]
-
-
-        //GLES20.glGenRenderbuffers(1, renderBufferHandle, 0)
-        //GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, renderBufferIndex)
-        //GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, width, height)
-        //GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT, GLES20.GL_RENDERBUFFER, renderBufferIndex)
-
-
-        println("frameBufferIndex = " + frameBufferIndex)
-
-        */
-
         starBackground.load(context, graphics, "galaxy.jpg")
         earthMap.load(context, graphics, "earth_texture.jpg")
         testTexture.load(context, graphics, "test.png")
-
-
-
-
-
 
     }
 
@@ -227,56 +175,6 @@ class GraphicsRenderer(var scene: EarthScene?,
 
 
 
-        /*
-        // Redraw background color
-        val piFloat: Float = kotlin.math.PI.toFloat()
-        spin -= 0.01f
-        if (spin < 0.0f) {
-            spin += 2.0f * piFloat
-        }
-
-        projectionMatrix.ortho(1024.0f,
-            1024.0f)
-        modelViewMatrix.translation(width / 4.0f, height / 4.0f, 0.0f)
-        modelViewMatrix.rotateZ(spin)
-        modelViewMatrix.scale(0.5f)
-
-
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-        GLES20.glClearColor(1.0f, 0.15f, 0.4f, 1.0f)
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
-
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferIndex)
-        GLES20.glClearColor(0.0f, 0.15f, 0.4f, 1.0f)
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
-
-
-        mZippo.draw()
-
-
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-
-        if (true) {
-
-            val color = Color(1.0f, 0.0f, 0.5f, 0.5f)
-
-            graphics?.blendSetAlpha()
-
-            graphics?.linkBufferToShaderProgram(graphicsPipeline?.programSprite2D, vertexBuffer)
-
-            graphics?.uniformsTextureSet(graphicsPipeline?.programSprite2D, junkText)
-            graphics?.uniformsModulateColorSet(graphicsPipeline?.programSprite2D, color)
-            graphics?.uniformsProjectionMatrixSet(
-                graphicsPipeline?.programSprite2D,
-                projectionMatrix
-            )
-            graphics?.uniformsModelViewMatrixSet(graphicsPipeline?.programSprite2D, modelViewMatrix)
-
-            graphics?.drawTriangleStrips(indexBuffer, 4)
-            graphics?.unlinkBufferFromShaderProgram(graphicsPipeline?.programSprite2D)
-        }
-        */
-
 
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetPreBloom.frameBufferIndex)
         GLES20.glClearColor(0.2f, 0.0f, 0.1f, 1.0f)
@@ -293,13 +191,33 @@ class GraphicsRenderer(var scene: EarthScene?,
         // Juggle Da Blurrr
         //
 
+        val blurScale = 2
+        val blurWidth = width / blurScale
+        val blurHeight = height / blurScale
+
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
+
+        renderTargetBloom.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, (width / 4).toFloat(), (height / 2).toFloat())
+        //renderTargetBloom.frameBufferSpriteInstance.projectionMatrix.ortho(blurWidth.toFloat(), blurHeight.toFloat())
+
+        renderTargetBloom.frameBufferSpriteInstance.projectionMatrix.ortho(0.0f, blurWidth.toFloat(), blurHeight.toFloat(),
+            -blurHeight.toFloat(), -1024.0f, 1024.0f)
+
+        //ortho(blurWidth.toFloat(), (blurHeight).toFloat())
+        //
         renderTargetBloom.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 
+
+        /*
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur2.frameBufferIndex)
-        renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurVertical)
+        //renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurVertical)
+        renderTargetBlur1.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, blurWidth.toFloat(), blurHeight.toFloat())
+        renderTargetBlur1.frameBufferSpriteInstance.projectionMatrix.ortho(blurWidth.toFloat(), blurHeight.toFloat())
+        renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 
+        */
 
+        /*
         for (i in 0 until 32) {
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
             renderTargetBlur2.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
@@ -308,10 +226,7 @@ class GraphicsRenderer(var scene: EarthScene?,
             renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurVertical)
         }
 
-
-
-
-            scene?.draw3DBloom(width, height)
+         */
 
         //blurInstance1.load(graphics, renderTargetBlur1.frameBufferTexture)
         //blurInstance2.load(graphics, renderTargetBlur2.frameBufferTexture)
@@ -335,14 +250,33 @@ class GraphicsRenderer(var scene: EarthScene?,
 
 
         graphics?.blendSetAdditive()
-        renderTargetBlur2.render()
+        //renderTargetBlur2.render(this.width, this.height)
+
+
+
+        //val blurScale = 2
+        //val blurWidth = width / blurScale
+        //val blurHeight = height / blurScale
+
+        //GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
+
+        renderTargetBlur1.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, (blurWidth).toFloat(), (blurHeight).toFloat())
+        renderTargetBlur1.frameBufferSpriteInstance.projectionMatrix.ortho((blurWidth).toFloat(), blurHeight.toFloat())
+        renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
+
+
+        renderTargetBlur1.render()//this.width, this.height, 2)
+
 
         graphics?.blendSetDisabled()
 
-        Log.d("a", "anything?")
+        /*
+
         if (Random.nextBoolean()) {
             scene?.draw3D(width, height)
         }
+
+        */
 
         //renderTargetBloom.render()
 
