@@ -7,11 +7,7 @@ void main(void) {
 
     lowp vec2 center = TextureCoordinatesOut;
     lowp vec3 sum = vec3(0.0, 0.0, 0.0);
-    lowp float stepY = 0.001;
-    //1.0 / (TextureSize.x);
-
-    //1.0 / (TextureSize.y);
-
+    lowp float stepY = (1.0 / TextureSize.y);
 
     sum += texture2D(Texture, vec2(center.x, center.y - stepY * 3.0)).rgb * 0.07;
     sum += texture2D(Texture, vec2(center.x, center.y - stepY * 2.0)).rgb * 0.105;

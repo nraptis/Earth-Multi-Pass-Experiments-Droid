@@ -463,6 +463,7 @@ class GraphicsLibrary(activity: GraphicsActivity?,
     fun uniformsTextureSizeSet(program: ShaderProgram?, width: Float, height: Float) {
         program?.let { _program ->
             if (_program.uniformLocationTextureSize != -1) {
+                print("uniform width = " + width + ", height = " + height)
                 GLES20.glUniform2f(_program.uniformLocationTextureSize, width, height)
             }
         }

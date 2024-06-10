@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.opengl.GLES20
 
-class GraphicsRenderTarget {
+class GraphicsRenderTarget<T>(var frameBufferSpriteInstance: GraphicsSpriteInstance<T>) where T : Positionable2D, T : Texturable2D, T: FloatBufferable {
 
     var width = 0
     var height = 0
@@ -16,7 +16,6 @@ class GraphicsRenderTarget {
     var frameBufferIndex = -1
     var renderBufferIndex = -1
     val frameBufferTexture = GraphicsTexture()
-    var frameBufferSpriteInstance = GraphicsSprite2DInstance()
 
     fun load(graphics: GraphicsLibrary?, graphicsPipeline: GraphicsPipeline?, width: Int, height: Int) {
         this.graphics = graphics

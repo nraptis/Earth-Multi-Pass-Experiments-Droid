@@ -126,6 +126,7 @@ class GraphicsSpriteBlurInstance: GraphicsSpriteInstance<VertexSprite2D>(arrayOf
 
     override fun bindAdditionalUniforms(shaderProgram: ShaderProgram?) {
 
+        print("GraphicsSpriteBlurInstance ==> bindAdditionalUniforms")
         shaderProgram?.let { _shaderProgram ->
             graphics?.let { _graphics ->
                 _graphics.uniformsTextureSizeSet(

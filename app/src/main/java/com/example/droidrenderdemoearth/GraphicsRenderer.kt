@@ -5,8 +5,10 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
+import android.util.Log
 import java.lang.ref.WeakReference
 import java.nio.IntBuffer
+import kotlin.random.Random
 
 interface GraphicsScene {
 
@@ -64,18 +66,16 @@ class GraphicsRenderer(var scene: EarthScene?,
     val earthMap = GraphicsTexture()
     val testTexture = GraphicsTexture()
 
+    val renderTargetPreBloom = GraphicsRenderTarget(frameBufferSpriteInstance = GraphicsSprite2DInstance())
 
-    val renderTargetPreBloom = GraphicsRenderTarget()
+    val renderTargetBloom = GraphicsRenderTarget(frameBufferSpriteInstance = GraphicsSprite2DInstance())
 
-    val renderTargetBloom = GraphicsRenderTarget()
-
-
-    val renderTargetBlur1 = GraphicsRenderTarget()
-    val renderTargetBlur2 = GraphicsRenderTarget()
+    val renderTargetBlur1 = GraphicsRenderTarget(frameBufferSpriteInstance = GraphicsSpriteBlurInstance())
+    val renderTargetBlur2 = GraphicsRenderTarget(frameBufferSpriteInstance = GraphicsSpriteBlurInstance())
 
 
-    var blurInstance1 = GraphicsSpriteBlurInstance()
-    var blurInstance2 = GraphicsSpriteBlurInstance()
+    //var blurInstance1 = GraphicsSpriteBlurInstance()
+    //var blurInstance2 = GraphicsSpriteBlurInstance()
 
 
     init {
@@ -129,8 +129,8 @@ class GraphicsRenderer(var scene: EarthScene?,
         renderTargetBlur2.load(graphics, graphicsPipeline, width, height)
 
 
-        blurInstance1.load(graphics, renderTargetBlur1.frameBufferTexture)
-        blurInstance2.load(graphics, renderTargetBlur2.frameBufferTexture)
+        //blurInstance1.load(graphics, renderTargetBlur1.frameBufferTexture)
+        //blurInstance2.load(graphics, renderTargetBlur2.frameBufferTexture)
 
 
 
@@ -300,7 +300,7 @@ class GraphicsRenderer(var scene: EarthScene?,
         renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurVertical)
 
 
-        for (i in 0 until 8) {
+        for (i in 0 until 32) {
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
             renderTargetBlur2.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 
@@ -309,18 +309,9 @@ class GraphicsRenderer(var scene: EarthScene?,
         }
 
 
-        /*
-        for (i in 0 until 1) {
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
-            renderTargetBlur2.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurVertical)
 
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur2.frameBufferIndex)
-            renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
-        }
 
-         */
-
-        //scene?.draw3DBloom(width, height)
+            scene?.draw3DBloom(width, height)
 
         //blurInstance1.load(graphics, renderTargetBlur1.frameBufferTexture)
         //blurInstance2.load(graphics, renderTargetBlur2.frameBufferTexture)
@@ -348,7 +339,10 @@ class GraphicsRenderer(var scene: EarthScene?,
 
         graphics?.blendSetDisabled()
 
-        scene?.draw3D(width, height)
+        Log.d("a", "anything?")
+        if (Random.nextBoolean()) {
+            scene?.draw3D(width, height)
+        }
 
         //renderTargetBloom.render()
 
@@ -362,7 +356,8 @@ class GraphicsRenderer(var scene: EarthScene?,
 
         //renderTargetBlur2.render()
 
-        ///surfaceView?.requestRender()
+
+        surfaceView?.requestRender()
 
     }
 
