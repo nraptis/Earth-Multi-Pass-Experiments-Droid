@@ -1,6 +1,8 @@
 package com.example.droidrenderdemoearth
 
 import android.app.Activity
+import android.content.Context
+import android.content.res.Configuration
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +12,31 @@ class GraphicsActivity : Activity() {
 
     private lateinit var gLView: GLSurfaceView
 
+    companion object {
+        fun isTablet(context: Context): Boolean {
+            return ((context.resources.configuration.screenLayout
+                    and Configuration.SCREENLAYOUT_SIZE_MASK)
+                    >= Configuration.SCREENLAYOUT_SIZE_LARGE)
+        }
+    }
+
+    var isStereoscopicEnabled = false
+    var isBloomEnabled = true
+    var bloomPasses = 8
+    var stereoSpreadBase = 3.0f
+    var stereoSpreadMax = 9.0f
+
+    init {
+        // Override initial values if the device is a tablet
+        /*
+        if (isTablet(this)) {
+            bloomPasses = 6
+            stereoSpreadBase = 4.0f
+            stereoSpreadMax = 12.0f
+        }
+
+         */
+    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

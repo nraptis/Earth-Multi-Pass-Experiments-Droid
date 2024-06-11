@@ -54,7 +54,7 @@ class EarthScene(
         testTexture.load(context, graphics, "test.png")
 
 
-        galaxyMap.load(context, graphics, "galaxy.jpg")
+        galaxyMap.load(context, graphics, "colorful_galaxy_01.jpg")
         galaxyInstance.load(graphics, galaxyMap)
         galaxyInstance.projectionMatrix.ortho(width, height)
         galaxyInstance.setPositionQuad(0.0f, 0.0f,

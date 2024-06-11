@@ -90,9 +90,10 @@ class EarthModelDataStrip(var earthModelData: EarthModelData?,
         spriteVertexBuffer = GraphicsArrayBuffer()
         spriteVertexBuffer.load(graphics, spriteVertexArray)
 
-        bloomShapeBuffer.color.red = 1.0f
-        bloomShapeBuffer.color.green = 0.25f
-        bloomShapeBuffer.color.alpha = 0.15f
+        bloomShapeBuffer.color.red = 0.6f
+        bloomShapeBuffer.color.green = 0.75f
+        bloomShapeBuffer.color.blue = 1.0f
+        bloomShapeBuffer.color.alpha = 1.0f
         bloomShapeBuffer.load(graphics, shapeVertexBuffer, indices)
 
         surfaceSpriteBuffer.load(graphics, spriteVertexBuffer, indices, texture)
