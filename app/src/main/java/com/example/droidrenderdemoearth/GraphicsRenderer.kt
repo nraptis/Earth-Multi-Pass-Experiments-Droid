@@ -66,6 +66,9 @@ class GraphicsRenderer(var scene: EarthScene?,
     val earthMap = GraphicsTexture()
     val testTexture = GraphicsTexture()
 
+    private val blurScale = 4
+
+
     val renderTargetPreBloom = GraphicsRenderTarget(frameBufferSpriteInstance = GraphicsSprite2DInstance())
 
     val renderTargetBloom = GraphicsRenderTarget(frameBufferSpriteInstance = GraphicsSprite2DInstance())
@@ -127,7 +130,6 @@ class GraphicsRenderer(var scene: EarthScene?,
         //renderTargetBlur1.load(graphics, graphicsPipeline, width, height)
         //renderTargetBlur2.load(graphics, graphicsPipeline, width, height)
 
-        val blurScale = 2
         val blurWidth = width / blurScale
         val blurHeight = height / blurScale
 
@@ -191,22 +193,28 @@ class GraphicsRenderer(var scene: EarthScene?,
         // Juggle Da Blurrr
         //
 
-        val blurScale = 2
+
         val blurWidth = width / blurScale
         val blurHeight = height / blurScale
 
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
 
-        renderTargetBloom.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, (width / 4).toFloat(), (height / 2).toFloat())
+        /*
+        renderTargetBloom.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, (blurWidth / (blurScale)).toFloat(), (blurHeight).toFloat())
         //renderTargetBloom.frameBufferSpriteInstance.projectionMatrix.ortho(blurWidth.toFloat(), blurHeight.toFloat())
-
         renderTargetBloom.frameBufferSpriteInstance.projectionMatrix.ortho(0.0f, blurWidth.toFloat(), blurHeight.toFloat(),
-            -blurHeight.toFloat(), -1024.0f, 1024.0f)
-
-        //ortho(blurWidth.toFloat(), (blurHeight).toFloat())
-        //
+            -(blurHeight * blurScale).toFloat(), -1024.0f, 1024.0f)
         renderTargetBloom.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 
+         */
+
+        Log.d("blurHeight", "blurHeight = " + blurHeight)
+        Log.d("blurHeight", "blurHeight / blurScale = " + (blurHeight / blurScale))
+        Log.d("blurHeight", "height = " + height)
+        
+        renderTargetBloom.frameBufferSpriteInstance.setPositionFrame(0.0f, (height - blurHeight).toFloat(), (blurWidth).toFloat(), (blurHeight).toFloat())
+        renderTargetBloom.frameBufferSpriteInstance.projectionMatrix.ortho((width).toFloat(), (height).toFloat())
+        renderTargetBloom.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 
         /*
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur2.frameBufferIndex)
@@ -260,9 +268,15 @@ class GraphicsRenderer(var scene: EarthScene?,
 
         //GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
 
-        renderTargetBlur1.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, (blurWidth).toFloat(), (blurHeight).toFloat())
-        renderTargetBlur1.frameBufferSpriteInstance.projectionMatrix.ortho((blurWidth).toFloat(), blurHeight.toFloat())
+        //renderTargetBlur1.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, (blurWidth).toFloat(), (blurHeight).toFloat())
+        //renderTargetBlur1.frameBufferSpriteInstance.projectionMatrix.ortho((blurWidth).toFloat(), blurHeight.toFloat())
+        //renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
+
+        graphics?.blendSetDisabled()
+        renderTargetBlur1.frameBufferSpriteInstance.setPositionFrame(200.0f, 200.0f, 512.0f, 512.0f * 2.0f)
+        renderTargetBlur1.frameBufferSpriteInstance.projectionMatrix.ortho(width, height)
         renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
+
 
 
         renderTargetBlur1.render()//this.width, this.height, 2)
