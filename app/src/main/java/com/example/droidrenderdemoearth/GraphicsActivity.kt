@@ -22,26 +22,21 @@ class GraphicsActivity : Activity() {
 
     var isStereoscopicEnabled = false
     var isBloomEnabled = true
-    var bloomPasses = 8
+    var bloomPasses = 6
     var stereoSpreadBase = 3.0f
     var stereoSpreadMax = 9.0f
-
-    init {
-        // Override initial values if the device is a tablet
-        /*
-        if (isTablet(this)) {
-            bloomPasses = 6
-            stereoSpreadBase = 4.0f
-            stereoSpreadMax = 12.0f
-        }
-
-         */
-    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gLView = GraphicsSurfaceView(this)
         setContentView(gLView)
+
+        if (isTablet(this)) {
+            bloomPasses = 8
+            stereoSpreadBase = 6.0f
+            stereoSpreadMax = 16.0f
+        }
+
     }
 
     override fun onPause() {

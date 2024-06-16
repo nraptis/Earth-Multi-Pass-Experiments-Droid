@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.opengl.GLES20
 
-class GraphicsRenderTarget<T>(var frameBufferSpriteInstance: GraphicsSpriteInstance<T>) where T : Positionable2D, T : Texturable2D, T: FloatBufferable {
+class GraphicsRenderTarget<T>(var frameBufferSpriteInstance: GraphicsSpriteInstance<T>) where T : PositionConforming2D, T : TextureCoordinateConforming, T: FloatBufferable {
 
     var width = 0
     var height = 0
@@ -16,6 +16,8 @@ class GraphicsRenderTarget<T>(var frameBufferSpriteInstance: GraphicsSpriteInsta
     var frameBufferIndex = -1
     var renderBufferIndex = -1
     val frameBufferTexture = GraphicsTexture()
+    val frameBufferSprite = Sprite()
+
 
     fun load(graphics: GraphicsLibrary?, graphicsPipeline: GraphicsPipeline?, width: Int, height: Int) {
         this.graphics = graphics
@@ -32,7 +34,9 @@ class GraphicsRenderTarget<T>(var frameBufferSpriteInstance: GraphicsSpriteInsta
                 GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
                 GLES20.GL_TEXTURE_2D, frameBufferTextureIndex,0)
             frameBufferTexture.load(graphics, frameBufferTextureIndex, width, height)
-            frameBufferSpriteInstance.load(graphics, frameBufferTexture)
+            frameBufferSprite.load(graphics, frameBufferTexture)
+
+            frameBufferSpriteInstance.load(graphics, frameBufferSprite)
 
             frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, width.toFloat(), height.toFloat())
             frameBufferSpriteInstance.projectionMatrix.ortho(width, height)

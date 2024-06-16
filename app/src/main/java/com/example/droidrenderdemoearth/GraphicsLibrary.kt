@@ -478,6 +478,14 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         }
     }
 
+    fun uniformsModulateColorSet(program: ShaderProgram?, red: Float, green: Float, blue: Float, alpha: Float) {
+        program?.let { _program ->
+            if (_program.uniformLocationModulateColor != -1) {
+                GLES20.glUniform4f(_program.uniformLocationModulateColor, red, green, blue, alpha)
+            }
+        }
+    }
+
     // @Precondition: linkBufferToShaderProgram has been called with program.
     fun uniformsModulateColorSet(program: ShaderProgram?, buffer: FloatBuffer?) {
         program?.let { _program ->
@@ -582,6 +590,14 @@ class GraphicsLibrary(activity: GraphicsActivity?,
                     }
                 }
             }
+        }
+    }
+
+    // @Precondition: linkBufferToShaderProgram has been called with program.
+    // @Precondition: the texture is expected to be used on GL_TEXTURE0...
+    fun uniformsTextureSet(program: ShaderProgram?, sprite: Sprite?) {
+        sprite?.let { _sprite ->
+            uniformsTextureSet(program, _sprite.texture)
         }
     }
 

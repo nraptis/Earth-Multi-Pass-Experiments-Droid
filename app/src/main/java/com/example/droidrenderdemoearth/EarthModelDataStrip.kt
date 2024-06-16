@@ -8,15 +8,15 @@ class EarthModelDataStrip(var earthModelData: EarthModelData?,
                           var graphicsPipeline: GraphicsPipeline?,
                             var texture: GraphicsTexture?) {
 
-    val shapeVertexArray: Array<VertexShape3D>
-    val shapeVertexBuffer: GraphicsArrayBuffer<VertexShape3D>
+    val shapeVertexArray: Array<Shape3DVertex>
+    val shapeVertexBuffer: GraphicsArrayBuffer<Shape3DVertex>
 
-    val spriteVertexArray: Array<VertexSprite3D>
-    val spriteVertexBuffer: GraphicsArrayBuffer<VertexSprite3D>
+    val spriteVertexArray: Array<Sprite3DVertex>
+    val spriteVertexBuffer: GraphicsArrayBuffer<Sprite3DVertex>
 
     val indices: IntArray
 
-    val bloomShapeBuffer = GraphicsShapeBuffer<VertexShape3D>()
+    val bloomShapeBuffer = GraphicsShapeBuffer<Shape3DVertex>()
 
     val surfaceSpriteBuffer = GraphicsSprite3DBuffer()
 
@@ -31,11 +31,11 @@ class EarthModelDataStrip(var earthModelData: EarthModelData?,
         indices = IntArray(indexCount) { it }
 
         shapeVertexArray = Array(indexCount) {
-            VertexShape3D(0.0f, 0.0f, 0.0f)
+            Shape3DVertex(0.0f, 0.0f, 0.0f)
         }
 
         spriteVertexArray = Array(indexCount) {
-            VertexSprite3D(0.0f, 0.0f, 0.0f, 0.0f, 0.0f)
+            Sprite3DVertex(0.0f, 0.0f, 0.0f, 0.0f, 0.0f)
         }
 
         earthModelData?.let { _earthModelData ->
@@ -97,6 +97,11 @@ class EarthModelDataStrip(var earthModelData: EarthModelData?,
         bloomShapeBuffer.load(graphics, shapeVertexBuffer, indices)
 
         surfaceSpriteBuffer.load(graphics, spriteVertexBuffer, indices, texture)
+    }
+
+    fun updateStereo(radians: Float, width: Float, height: Float, stereoSpreadBase: Float, stereoSpreadMax: Float) {
+
+
     }
 
     fun draw3DBloom(width: Int, height: Int) {

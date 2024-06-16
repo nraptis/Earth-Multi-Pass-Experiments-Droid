@@ -3,14 +3,14 @@ package com.example.droidrenderdemoearth
 import java.nio.IntBuffer
 
 
-class GraphicsSprite2DBuffer: GraphicsSpriteBuffer<VertexSprite2D>() {
+class GraphicsSprite2DBuffer: GraphicsSpriteBuffer<Sprite2DVertex>() {
 }
 
-class GraphicsSprite3DBuffer: GraphicsSpriteBuffer<VertexSprite3D>() {
+class GraphicsSprite3DBuffer: GraphicsSpriteBuffer<Sprite3DVertex>() {
 
 }
 
-open class GraphicsSpriteBuffer<T>() where T : Positionable2D, T: Texturable2D, T: FloatBufferable {
+open class GraphicsSpriteBuffer<T>() where T : PositionConforming2D, T: TextureCoordinateConforming, T: FloatBufferable {
 
     var graphicsArrayBuffer: GraphicsArrayBuffer<T>? = null
 

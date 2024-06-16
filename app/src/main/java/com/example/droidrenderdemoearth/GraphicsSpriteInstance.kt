@@ -2,26 +2,26 @@ package com.example.droidrenderdemoearth
 
 import java.nio.IntBuffer
 
-class GraphicsSprite2DInstance: GraphicsSpriteInstance<VertexSprite2D>(arrayOf(
-    VertexSprite2D(0.0f, 0.0f, 0.0f, 0.0f),
-    VertexSprite2D(256.0f, 0.0f, 1.0f, 0.0f),
-    VertexSprite2D(0.0f, 256.0f, 0.0f, 1.0f),
-    VertexSprite2D(256.0f, 256.0f, 1.0f, 1.0f))) {
+class GraphicsSprite2DInstance: GraphicsSpriteInstance<Sprite2DVertex>(arrayOf(
+    Sprite2DVertex(0.0f, 0.0f, 0.0f, 0.0f),
+    Sprite2DVertex(256.0f, 0.0f, 1.0f, 0.0f),
+    Sprite2DVertex(0.0f, 256.0f, 0.0f, 1.0f),
+    Sprite2DVertex(256.0f, 256.0f, 1.0f, 1.0f))) {
 }
 
-class GraphicsSprite3DInstance: GraphicsSpriteInstance<VertexSprite3D>(arrayOf(
-    VertexSprite3D(0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
-    VertexSprite3D(256.0f, 0.0f, 0.0f, 1.0f, 0.0f),
-    VertexSprite3D(0.0f, 256.0f, 0.0f, 0.0f, 1.0f),
-    VertexSprite3D(256.0f, 256.0f, 0.0f, 1.0f, 1.0f))) {
+class GraphicsSprite3DInstance: GraphicsSpriteInstance<Sprite3DVertex>(arrayOf(
+    Sprite3DVertex(0.0f, 0.0f, 0.0f, 0.0f, 0.0f),
+    Sprite3DVertex(256.0f, 0.0f, 0.0f, 1.0f, 0.0f),
+    Sprite3DVertex(0.0f, 256.0f, 0.0f, 0.0f, 1.0f),
+    Sprite3DVertex(256.0f, 256.0f, 0.0f, 1.0f, 1.0f))) {
 }
 
-open class GraphicsSpriteInstance<T>(val vertexArray: Array<T>) where T : Positionable2D, T : Texturable2D, T: FloatBufferable {
+open class GraphicsSpriteInstance<T>(val vertexArray: Array<T>) where T : PositionConforming2D, T : TextureCoordinateConforming, T: FloatBufferable {
 
     var graphicsArrayBuffer = GraphicsArrayBuffer<T>()
 
     var graphics: GraphicsLibrary? = null
-    var texture: GraphicsTexture? = null
+    var sprite: Sprite? = null
 
     val indices = intArrayOf(0, 1, 2, 3)
     var indexBuffer: IntBuffer? = null
@@ -80,9 +80,9 @@ open class GraphicsSpriteInstance<T>(val vertexArray: Array<T>) where T : Positi
         isVertexBufferDirty = true
     }
 
-    fun load(graphics: GraphicsLibrary?, texture: GraphicsTexture?) {
+    fun load(graphics: GraphicsLibrary?, sprite: Sprite?) {
         this.graphics = graphics
-        this.texture = texture
+        this.sprite = sprite
         indexBuffer = graphics?.indexBufferGenerate(indices)
         graphicsArrayBuffer.load(graphics, vertexArray)
         isVertexBufferDirty = false
@@ -104,7 +104,9 @@ open class GraphicsSpriteInstance<T>(val vertexArray: Array<T>) where T : Positi
 
                 _graphics.linkBufferToShaderProgram(_shaderProgram, graphicsArrayBuffer)
 
-                _graphics.uniformsTextureSet(_shaderProgram, texture)
+
+
+                _graphics.uniformsTextureSet(_shaderProgram, sprite)
                 _graphics.uniformsModulateColorSet(_shaderProgram, color)
                 _graphics.uniformsProjectionMatrixSet(_shaderProgram, projectionMatrix)
                 _graphics.uniformsModelViewMatrixSet(_shaderProgram, modelViewMatrix)
@@ -118,11 +120,11 @@ open class GraphicsSpriteInstance<T>(val vertexArray: Array<T>) where T : Positi
     }
 }
 
-class GraphicsSpriteBlurInstance: GraphicsSpriteInstance<VertexSprite2D>(arrayOf(
-    VertexSprite2D(0.0f, 0.0f, 0.0f, 0.0f),
-    VertexSprite2D(256.0f, 0.0f, 1.0f, 0.0f),
-    VertexSprite2D(0.0f, 256.0f, 0.0f, 1.0f),
-    VertexSprite2D(256.0f, 256.0f, 1.0f, 1.0f))) {
+class GraphicsSpriteBlurInstance: GraphicsSpriteInstance<Sprite2DVertex>(arrayOf(
+    Sprite2DVertex(0.0f, 0.0f, 0.0f, 0.0f),
+    Sprite2DVertex(256.0f, 0.0f, 1.0f, 0.0f),
+    Sprite2DVertex(0.0f, 256.0f, 0.0f, 1.0f),
+    Sprite2DVertex(256.0f, 256.0f, 1.0f, 1.0f))) {
 
     override fun bindAdditionalUniforms(shaderProgram: ShaderProgram?) {
 
@@ -131,8 +133,8 @@ class GraphicsSpriteBlurInstance: GraphicsSpriteInstance<VertexSprite2D>(arrayOf
             graphics?.let { _graphics ->
                 _graphics.uniformsTextureSizeSet(
                     _shaderProgram,
-                    texture?.widthf ?: 32.0f,
-                    texture?.heightf ?: 32.0f
+                    sprite?.texture?.widthf ?: 32.0f,
+                    sprite?.texture?.heightf ?: 32.0f
                 )
             }
         }

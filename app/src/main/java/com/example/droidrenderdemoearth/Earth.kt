@@ -6,6 +6,8 @@ class Earth(var graphics: GraphicsLibrary?,
 
     var earthModelData: EarthModelData
     var earthModelDataStrips: Array<EarthModelDataStrip>
+    var width = 800.0f
+    var height = 1200.0f
 
     init {
         //this.graphics = graphics
@@ -17,6 +19,17 @@ class Earth(var graphics: GraphicsLibrary?,
 
         earthModelDataStrips = Array<EarthModelDataStrip>(EarthModelData.tileCountV) {
             EarthModelDataStrip(earthModelData, it + 1, graphics, graphicsPipeline, texture)
+        }
+    }
+
+    fun load(graphics: GraphicsLibrary?,
+             graphicsPipeline: GraphicsPipeline?) {
+
+    }
+
+    fun updateStereo(radians: Float, stereoSpreadBase: Float, stereoSpreadMax: Float) {
+        for (earthModelDataStrip in earthModelDataStrips) {
+            earthModelDataStrip.updateStereo(radians, width, height, stereoSpreadBase, stereoSpreadMax)
         }
     }
 

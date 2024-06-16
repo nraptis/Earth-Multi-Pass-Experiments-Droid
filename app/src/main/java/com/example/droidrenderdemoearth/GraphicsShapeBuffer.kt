@@ -1,17 +1,18 @@
 package com.example.droidrenderdemoearth
 
+import android.icu.text.Transliterator.Position
 import java.nio.IntBuffer
 
 //class GraphicsShapeBuffer {
 
-class GraphicsShape2DBuffer: GraphicsShapeBuffer<VertexShape2D>() {
+class GraphicsShape2DBuffer: GraphicsShapeBuffer<Shape2DVertex>() {
 }
 
-class GraphicsShape3DBuffer: GraphicsShapeBuffer<VertexShape3D>() {
+class GraphicsShape3DBuffer: GraphicsShapeBuffer<Shape3DVertex>() {
 
 }
 
-open class GraphicsShapeBuffer<T>() where T : Positionable2D, T: FloatBufferable {
+open class GraphicsShapeBuffer<T>() where T : PositionConforming2D, T: FloatBufferable {
 
     var graphicsArrayBuffer: GraphicsArrayBuffer<T>? = null
 

@@ -2,21 +2,21 @@ package com.example.droidrenderdemoearth
 
 import java.nio.IntBuffer
 
-class GraphicsShape2DInstance: GraphicsShapeInstance<VertexShape2D>(arrayOf(
-    VertexShape2D(0.0f, 0.0f),
-    VertexShape2D(256.0f, 0.0f),
-    VertexShape2D(0.0f, 256.0f),
-    VertexShape2D(256.0f, 256.0f))) {
+class GraphicsShape2DInstance: GraphicsShapeInstance<Shape2DVertex>(arrayOf(
+    Shape2DVertex(0.0f, 0.0f),
+    Shape2DVertex(256.0f, 0.0f),
+    Shape2DVertex(0.0f, 256.0f),
+    Shape2DVertex(256.0f, 256.0f))) {
 }
 
-class GraphicsShape3DInstance: GraphicsShapeInstance<VertexShape3D>(arrayOf(
-    VertexShape3D(0.0f, 0.0f, 0.0f),
-    VertexShape3D(256.0f, 0.0f, 0.0f),
-    VertexShape3D(0.0f, 256.0f, 0.0f),
-    VertexShape3D(256.0f, 256.0f, 0.0f))) {
+class GraphicsShape3DInstance: GraphicsShapeInstance<Shape3DVertex>(arrayOf(
+    Shape3DVertex(0.0f, 0.0f, 0.0f),
+    Shape3DVertex(256.0f, 0.0f, 0.0f),
+    Shape3DVertex(0.0f, 256.0f, 0.0f),
+    Shape3DVertex(256.0f, 256.0f, 0.0f))) {
 }
 
-open class GraphicsShapeInstance<T>(val vertexArray: Array<T>) where T : Positionable2D, T: FloatBufferable {
+open class GraphicsShapeInstance<T>(val vertexArray: Array<T>) where T : PositionConforming2D, T: FloatBufferable {
 
     var graphicsArrayBuffer = GraphicsArrayBuffer<T>()
 

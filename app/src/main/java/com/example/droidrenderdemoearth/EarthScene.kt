@@ -13,8 +13,16 @@ class EarthScene(
     override var graphicsPipeline: GraphicsPipeline? = null
     override var graphics: GraphicsLibrary? = null
 
-    val earthMap = GraphicsTexture()
-    val galaxyMap = GraphicsTexture()
+    val earthMapTexture = GraphicsTexture()
+    val galaxyMapTexture = GraphicsTexture()
+    val lightMapTexture = GraphicsTexture()
+
+    val earthMap = Sprite()
+    val galaxyMap = Sprite()
+    val lightMap = Sprite()
+
+
+
     val testTexture = GraphicsTexture()
 
     var earth: Earth? = null
@@ -24,13 +32,9 @@ class EarthScene(
 
     var blahInstane = GraphicsSprite2DInstance()
     var davidBlane = GraphicsSprite3DInstance()
-    var tomRizzo = GraphicsSpriteBlurInstance()
-    var geraldoHanjab = GraphicsSpriteBlurInstance()
 
     var blahInstane2 = GraphicsSprite2DInstance()
     var davidBlane2 = GraphicsSprite3DInstance()
-    var tomRizzo2 = GraphicsSpriteBlurInstance()
-    var geraldoHanjab2 = GraphicsSpriteBlurInstance()
 
 
 
@@ -49,12 +53,14 @@ class EarthScene(
     override fun load() {
         println("EarthScene => load")
 
+        earthMapTexture.load(context, graphics, "earth_texture.jpg")
+        galaxyMapTexture.load(context, graphics, "colorful_galaxy_01.jpg")
+        lightMapTexture.load(context, graphics, "lights_texture.jpg")
 
-        earthMap.load(context, graphics, "earth_texture.jpg")
-        testTexture.load(context, graphics, "test.png")
+        earthMap.load(graphics, earthMapTexture)
+        galaxyMap.load(graphics, galaxyMapTexture)
+        lightMap.load(graphics, lightMapTexture)
 
-
-        galaxyMap.load(context, graphics, "colorful_galaxy_01.jpg")
         galaxyInstance.load(graphics, galaxyMap)
         galaxyInstance.projectionMatrix.ortho(width, height)
         galaxyInstance.setPositionQuad(0.0f, 0.0f,
@@ -70,11 +76,6 @@ class EarthScene(
         davidBlane.load(graphics, earthMap)
         davidBlane.projectionMatrix.ortho(width, height)
 
-        tomRizzo.load(graphics, testTexture)
-        tomRizzo.projectionMatrix.ortho(width, height)
-
-        geraldoHanjab.load(graphics, testTexture)
-        geraldoHanjab.projectionMatrix.ortho(width, height)
 
 
 
@@ -84,12 +85,6 @@ class EarthScene(
 
         davidBlane2.load(graphics, earthMap)
         davidBlane2.projectionMatrix.ortho(width, height)
-
-        tomRizzo2.load(graphics, testTexture)
-        tomRizzo2.projectionMatrix.ortho(width, height)
-
-        geraldoHanjab2.load(graphics, testTexture)
-        geraldoHanjab2.projectionMatrix.ortho(width, height)
 
 
 
