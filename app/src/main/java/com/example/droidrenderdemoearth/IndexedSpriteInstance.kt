@@ -2,28 +2,9 @@ package com.example.droidrenderdemoearth
 
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
+import kotlin.random.Random
 
-fun FloatBuffer?.toFloatArray(): FloatArray? {
-    return this?.let { buffer ->
-        buffer.position(0)
-        val array = FloatArray(buffer.remaining())
-        buffer.get(array)
-        buffer.position(0)
-        array
-    }
-}
-
-fun IntBuffer?.toIntArray(): IntArray? {
-    return this?.let { buffer ->
-        buffer.position(0)
-        val array = IntArray(buffer.remaining())
-        buffer.get(array)
-        buffer.position(0)
-        array
-    }
-}
-
-class IndexedSpriteInstance<NodeType>(
+open class IndexedSpriteInstance<NodeType>(
     uniformsVertex: UniformsVertex,
     uniformsFragment: UniformsFragment
 ) : IndexedInstance<NodeType>(uniformsVertex, uniformsFragment)
@@ -58,51 +39,35 @@ class IndexedSpriteInstance<NodeType>(
         shaderProgram?.let { _shaderProgram ->
             graphics?.let { _graphics ->
 
-                setPositionFrame(0.0f, 0.0f, 600.0f, 700.0f)
-                projectionMatrix.ortho(500.0f, 500.0f)
-                modelViewMatrix.reset()
-                red = 1.0f
-                green = 0.5f
-                blue = 0.5f
-                alpha = 1.0f
-
-                println("Indices: " + indices)
-                println("indexBuffer: " + indexBuffer)
-
-                val intz = indexBuffer.toIntArray()
-                println("intz:")
-                intz?.forEach { println(it) }
-
-
-                val floatz = vertexBuffer.toFloatArray()
-
-                println("floatz = ")
-                floatz?.forEach { println(it) }
-
-                println("vertexBufferIndex = " + vertexBufferIndex)
-
-
-                //if (isVertexBufferDirty) {
+                if (isVertexBufferDirty) {
                     writeVertexBuffer()
                     isVertexBufferDirty = false
-                //}
+                }
 
                 _graphics.linkBufferToShaderProgram(_shaderProgram, vertexBufferIndex)
 
-
                 _graphics.uniformsTextureSet(_shaderProgram, sprite)
 
-
-                _graphics.uniformsModulateColorSet(_shaderProgram, red, green, blue, alpha)
-                _graphics.uniformsProjectionMatrixSet(_shaderProgram, projectionMatrix)
-                _graphics.uniformsModelViewMatrixSet(_shaderProgram, modelViewMatrix)
-
-                //bindAdditionalUniforms(shaderProgram)
+                uniformsVertex.link(graphics, shaderProgram)
+                uniformsFragment.link(graphics, shaderProgram)
 
                 _graphics.drawTriangleStrips(indexBuffer, 4)
                 _graphics.unlinkBufferFromShaderProgram (_shaderProgram)
             }
         }
     }
-
 }
+
+class IndexedSpriteInstance2D: IndexedSpriteInstance<Sprite2DVertex>(UniformsSpriteVertex(),
+    UniformsSpriteFragment(),
+    Sprite2DVertex(-128.0f, -128.0f, 0.0f, 0.0f),
+    Sprite2DVertex(128.0f, -128.0f, 1.0f, 0.0f),
+    Sprite2DVertex(-128.0f, 128.0f, 0.0f, 1.0f),
+    Sprite2DVertex(128.0f, 128.0f, 1.0f, 1.0f))
+
+class IndexedSpriteInstance3D: IndexedSpriteInstance<Sprite3DVertex>(UniformsSpriteVertex(),
+    UniformsSpriteFragment(),
+    Sprite3DVertex(-128.0f, -128.0f, 0.0f,0.0f, 0.0f),
+    Sprite3DVertex(128.0f, -128.0f, 0.0f,1.0f, 0.0f),
+    Sprite3DVertex(-128.0f, 128.0f, 0.0f,0.0f, 1.0f),
+    Sprite3DVertex(128.0f, 128.0f, 0.0f,1.0f, 1.0f))

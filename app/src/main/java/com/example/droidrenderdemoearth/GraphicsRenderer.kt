@@ -175,11 +175,8 @@ class GraphicsRenderer(var scene: EarthScene?,
         scene?.update(deltaTime)
         previousFrameTimestamp = currentFrameTimestamp
 
-
-
-
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetPreBloom.frameBufferIndex)
-        GLES20.glClearColor(0.2f, 0.0f, 0.1f, 1.0f)
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
         scene?.draw3DPrebloom(width, height)
 
@@ -204,29 +201,15 @@ class GraphicsRenderer(var scene: EarthScene?,
 
 
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-
+        renderTargetPreBloom.frameBufferSpriteInstance.setPositionQuad(0.0f, height.toFloat(), width.toFloat(), height.toFloat(), 0.0f, 0.0f, width.toFloat(), 0.0f)
         renderTargetPreBloom.render()
 
 
 
-
-        //renderTargetBlur2.render(this.width, this.height)
-
-
-
-        //val blurScale = 2
-        //val blurWidth = width / blurScale
-        //val blurHeight = height / blurScale
-
-        //GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
-
-        //renderTargetBlur1.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, (blurWidth).toFloat(), (blurHeight).toFloat())
-        //renderTargetBlur1.frameBufferSpriteInstance.projectionMatrix.ortho((blurWidth).toFloat(), blurHeight.toFloat())
-        //renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
-
-        //graphics?.blendSetDisabled()
         graphics?.blendSetAdditive()
-        renderTargetBlur2.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, width.toFloat(), height.toFloat())
+        renderTargetBlur2.frameBufferSpriteInstance.setPositionQuad(0.0f, height.toFloat(), width.toFloat(), height.toFloat(), 0.0f, 0.0f, width.toFloat(), 0.0f)
+
+        //Frame(0.0f, 0.0f, width.toFloat(), height.toFloat())
         renderTargetBlur2.frameBufferSpriteInstance.projectionMatrix.ortho(width, height)
         renderTargetBlur2.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 
@@ -238,21 +221,8 @@ class GraphicsRenderer(var scene: EarthScene?,
             scene?.draw3D(width, height)
         //}
 
-        //renderTargetBloom.render()
-
-
-        //frameBufferSpriteInstance.setPositionFrame(200.0f, 200.0f, 800.0f, 782.0f)
-        //frameBufferSpriteInstance.projectionMatrix.ortho(width, height)
-        //frameBufferSpriteInstance.modelViewMatrix.reset()
-        //frameBufferSpriteInstance.render(graphicsPipeline.programSprite2D)
-
-        //renderTargetBlur1.frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, width, height)
-
-        //renderTargetBlur2.render()
-
-
+        
         surfaceView?.requestRender()
-
     }
 
     // At the end of this, "renderTargetBlur2" will contain
@@ -266,10 +236,21 @@ class GraphicsRenderer(var scene: EarthScene?,
         // I am not sure why these are the right numbers, why the y would be "height - blurHeight"
         // if the ortho is (width x height). Frankly, it seems wrong to me, but it seems to work.
         //
-        renderTargetBloom.frameBufferSpriteInstance.setPositionFrame(0.0f, (height - blurHeight).toFloat(), (blurWidth).toFloat(), (blurHeight).toFloat())
-        renderTargetBlur1.frameBufferSpriteInstance.setPositionFrame(0.0f, (height - blurHeight).toFloat(), (blurWidth).toFloat(), (blurHeight).toFloat())
-        renderTargetBlur2.frameBufferSpriteInstance.setPositionFrame(0.0f, (height - blurHeight).toFloat(), (blurWidth).toFloat(), (blurHeight).toFloat())
 
+        val x1 = 0.0f
+        val y1 = (height - blurHeight).toFloat()
+        val x2 = blurWidth.toFloat()
+        val y2 = (height - blurHeight).toFloat()
+        val x3 = 0.0f
+        val y3 = (height).toFloat()
+        val x4 = blurWidth.toFloat()
+        val y4 = (height).toFloat()
+
+        renderTargetBloom.frameBufferSpriteInstance.setPositionQuad(x1, y1, x2, y2, x3, y3, x4, y4)
+        renderTargetBlur1.frameBufferSpriteInstance.setPositionQuad(x1, y1, x2, y2, x3, y3, x4, y4)
+        renderTargetBlur2.frameBufferSpriteInstance.setPositionQuad(x1, y1, x2, y2, x3, y3, x4, y4)
+
+        //renderTargetBlur2.frameBufferSpriteInstance.setPositionQuad(0.0f, (height - blurHeight).toFloat(), (blurWidth).toFloat(), (blurHeight).toFloat())
         renderTargetBloom.frameBufferSpriteInstance.projectionMatrix.ortho((width).toFloat(), (height).toFloat())
         renderTargetBlur1.frameBufferSpriteInstance.projectionMatrix.ortho((width).toFloat(), (height).toFloat())
         renderTargetBlur2.frameBufferSpriteInstance.projectionMatrix.ortho((width).toFloat(), (height).toFloat())

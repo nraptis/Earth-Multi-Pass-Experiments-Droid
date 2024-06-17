@@ -29,13 +29,7 @@ class EarthScene(
 
     //var galaxyInstance = GraphicsSprite2DInstance()
 
-    var galaxyInstance = IndexedSpriteInstance<Sprite2DVertex>(UniformsSpriteVertex(),
-        UniformsSpriteFragment(),
-        Sprite2DVertex(),
-        Sprite2DVertex(),
-        Sprite2DVertex(),
-        Sprite2DVertex()
-        )
+    var galaxyInstance = IndexedSpriteInstance3D()
 
     var blahInstane = GraphicsSprite2DInstance()
     var davidBlane = GraphicsSprite3DInstance()
@@ -43,13 +37,8 @@ class EarthScene(
     var blahInstane2 = GraphicsSprite2DInstance()
     var davidBlane2 = GraphicsSprite3DInstance()
 
-
-
     var testShape1 = GraphicsShape2DInstance()
     var testShape2 = GraphicsShape3DInstance()
-
-
-
 
     override fun initialize(config: EGLConfig) {
         println("EarthScene => initialize")
@@ -131,9 +120,7 @@ class EarthScene(
     //fun
     override fun draw3DPrebloom(width: Int, height: Int) {
         //galaxyInstance.render(graphicsPipeline?.programSprite2D)
-
-        galaxyInstance.render(graphicsPipeline?.programSprite2D)
-
+        galaxyInstance.render(graphicsPipeline?.programSprite3D)
     }
     override fun draw3DBloom(width: Int, height: Int) {
 

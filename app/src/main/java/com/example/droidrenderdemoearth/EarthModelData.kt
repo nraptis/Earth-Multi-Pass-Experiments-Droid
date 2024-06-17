@@ -1,7 +1,6 @@
 package com.example.droidrenderdemoearth
 
 import kotlin.math.min
-import kotlin.math.PI
 
 class EarthModelData(width: Float, height: Float) {
 
@@ -18,9 +17,9 @@ class EarthModelData(width: Float, height: Float) {
         val _normals = Array(tileCountH + 1) { Array(tileCountV + 1) { Float3(0.0f, 0.0f, 11.0f) } }
         val _textureCoords = Array(tileCountH + 1) { Array(tileCountV + 1) { Float2(0.0f, 11.0f) } }
         val radius: Float = min(width, height) * (0.5f * 0.75f)
-        val startRotationH = PI.toFloat()
-        val endRotationH = startRotationH + PI.toFloat() * 2.0f
-        val startRotationV = PI.toFloat()
+        val startRotationH = Math.pi
+        val endRotationH = startRotationH + Math.pi2
+        val startRotationV = Math.pi
         val endRotationV = 0.0f
         var indexV = 0
         while (indexV <= tileCountV) {
@@ -33,8 +32,8 @@ class EarthModelData(width: Float, height: Float) {
                 var point = Float3(0.0f, 1.0f, 0.0f)
                 point = Math.rotateX(point, _angleV)
                 point = Math.rotateY(point, _angleH)
-                _points[indexH][indexV].x = point.x * radius
-                _points[indexH][indexV].y = point.y * radius
+                _points[indexH][indexV].x = point.x * radius - 200.0f
+                _points[indexH][indexV].y = point.y * radius + 100.0f
                 _points[indexH][indexV].z = point.z * radius
                 _normals[indexH][indexV].x = point.x
                 _normals[indexH][indexV].y = point.y
