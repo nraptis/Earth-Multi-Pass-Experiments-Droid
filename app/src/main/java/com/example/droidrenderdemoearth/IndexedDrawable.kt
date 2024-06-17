@@ -1,5 +1,6 @@
 package com.example.droidrenderdemoearth
 
+import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
 interface IndexedDrawable<NodeType> where NodeType : FloatBufferable {
@@ -9,16 +10,20 @@ interface IndexedDrawable<NodeType> where NodeType : FloatBufferable {
     var uniformsVertex: UniformsVertex
     var uniformsFragment: UniformsFragment
 
-    var indices: IntArray
+    var indices: IntArray?
     var indexBuffer: IntBuffer?
 
-    // Hmm, does this make sense for "sprite?"
-    //
-    // Let's note that in Swift, these grow in size. Here we have a stuck size.
-    //
-    var graphicsArrayBuffer: GraphicsArrayBuffer<NodeType>?
+    var vertices: List<NodeType>?
+    var vertexBuffer: FloatBuffer?
+    var vertexBufferIndex: Int
+
+    var isVertexBufferDirty: Boolean
 
     fun link(shaderProgram: ShaderProgram?)
+
+    fun setDirty(isVertexBufferDirty: Boolean) {
+        this.isVertexBufferDirty = isVertexBufferDirty
+    }
 
     var projectionMatrix: Matrix
         get() = uniformsVertex.projectionMatrix

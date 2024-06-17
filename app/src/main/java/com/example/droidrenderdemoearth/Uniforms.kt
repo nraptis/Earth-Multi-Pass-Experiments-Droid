@@ -7,10 +7,6 @@ interface Uniforms {
     fun link(graphics: GraphicsLibrary?, shaderProgram: ShaderProgram?)
 }
 
-
-
-
-
 interface UniformsVertex : Uniforms {
     var projectionMatrix: Matrix
     var modelViewMatrix: Matrix

@@ -163,6 +163,23 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         return result
     }
 
+    fun <T> floatBufferGenerate(list: List<T>): FloatBuffer where T : FloatBufferable {
+
+
+        // Calculate the total size needed for the buffer
+        val totalSize = floatBufferSize(list)
+
+        // Allocate the buffer memory
+        val result = ByteBuffer.allocateDirect(totalSize * Float.SIZE_BYTES).run {
+            // Use native byte order
+            order(ByteOrder.nativeOrder())
+            asFloatBuffer()
+        }
+        floatBufferWrite(list, result)
+
+        return result
+    }
+
     fun <T> floatBufferSize(array: Array<T>): Int where T : FloatBufferable {
         // Assume all elements in the array have the same size
         var elementSize = 0
@@ -172,6 +189,18 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         }
         // Calculate the total size needed for the buffer
         return array.size * elementSize
+    }
+
+    fun <T> floatBufferSize(list: List<T>): Int where T : FloatBufferable {
+        // Assume all elements in the array have the same size
+        var elementSize = 0
+
+        if (list.isNotEmpty()) {
+
+            elementSize = list.get(0).size()
+        }
+        // Calculate the total size needed for the buffer
+        return list.size * elementSize
     }
 
     fun <T> floatBufferWrite(array: Array<T>, floatBuffer: FloatBuffer?) where T : FloatBufferable {
@@ -188,6 +217,19 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         }
     }
 
+    fun <T> floatBufferWrite(list: List<T>, floatBuffer: FloatBuffer?) where T : FloatBufferable {
+
+        floatBuffer?.let { _floatBuffer ->
+            // Reset buffer position to the beginning
+            _floatBuffer.position(0)
+
+            // Write each Bufferable's data to the buffer
+            list.forEach { it.writeToBuffer(_floatBuffer) }
+
+            // Reset buffer position to the beginning
+            _floatBuffer.position(0)
+        }
+    }
     fun <T> floatBufferWrite(item: T, floatBuffer: FloatBuffer?) where T : FloatBufferable {
 
         floatBuffer?.let { _floatBuffer ->
