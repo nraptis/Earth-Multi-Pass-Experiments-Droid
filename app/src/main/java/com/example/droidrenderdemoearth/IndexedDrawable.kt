@@ -25,6 +25,9 @@ interface IndexedDrawable<NodeType> where NodeType : FloatBufferable {
         this.isVertexBufferDirty = isVertexBufferDirty
     }
 
+    fun render(shaderProgram: ShaderProgram?)
+
+
     var projectionMatrix: Matrix
         get() = uniformsVertex.projectionMatrix
         set(value) {

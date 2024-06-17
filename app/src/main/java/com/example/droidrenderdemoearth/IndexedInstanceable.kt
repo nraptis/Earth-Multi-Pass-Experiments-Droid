@@ -8,6 +8,9 @@ interface IndexedInstanceable<NodeType : FloatBufferable> : IndexedDrawable<Node
     fun load(graphics: GraphicsLibrary?) {
         this.graphics = graphics
         graphics?.let { _graphics ->
+
+            indices = intArrayOf(0, 1, 2, 3)
+
             indices?.let { _indices ->
                 indexBuffer = _graphics.indexBufferGenerate(_indices)
             }
@@ -26,9 +29,11 @@ interface IndexedInstanceable<NodeType : FloatBufferable> : IndexedDrawable<Node
     }
 
     fun writeVertexBuffer() {
+        println("writeVertexBuffer =>")
         graphics?.let { _graphics ->
             vertices?.let { _vertices ->
                 vertexBuffer?.let { _vertexBuffer ->
+                    println("write vertice: " + _vertices)
                     _graphics.floatBufferWrite(_vertices, _vertexBuffer)
                     val size = _graphics.floatBufferSize(_vertices) * Float.SIZE_BYTES
                     _graphics.bufferArrayWrite(vertexBufferIndex, size, _vertexBuffer)

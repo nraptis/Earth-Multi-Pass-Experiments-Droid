@@ -27,8 +27,15 @@ class EarthScene(
 
     var earth: Earth? = null
 
-    var galaxyInstance = GraphicsSprite2DInstance()
+    //var galaxyInstance = GraphicsSprite2DInstance()
 
+    var galaxyInstance = IndexedSpriteInstance<Sprite2DVertex>(UniformsSpriteVertex(),
+        UniformsSpriteFragment(),
+        Sprite2DVertex(),
+        Sprite2DVertex(),
+        Sprite2DVertex(),
+        Sprite2DVertex()
+        )
 
     var blahInstane = GraphicsSprite2DInstance()
     var davidBlane = GraphicsSprite3DInstance()
@@ -61,13 +68,25 @@ class EarthScene(
         galaxyMap.load(graphics, galaxyMapTexture)
         lightMap.load(graphics, lightMapTexture)
 
+        /*
         galaxyInstance.load(graphics, galaxyMap)
         galaxyInstance.projectionMatrix.ortho(width, height)
         galaxyInstance.setPositionQuad(0.0f, 0.0f,
             width.toFloat(), 0.0f,
             0.0f, height.toFloat(),
             width.toFloat(), height.toFloat())
+         */
 
+
+        val projectionMatrix = Matrix()
+        projectionMatrix.ortho(width, height)
+
+        galaxyInstance.load(graphics, lightMap)
+        galaxyInstance.projectionMatrix.ortho(width, height)
+        galaxyInstance.setPositionQuad(0.0f, 0.0f,
+            width.toFloat(), 0.0f,
+            0.0f, height.toFloat(),
+            width.toFloat(), height.toFloat())
 
 
         blahInstane.load(graphics, earthMap)
@@ -111,7 +130,10 @@ class EarthScene(
 
     //fun
     override fun draw3DPrebloom(width: Int, height: Int) {
+        //galaxyInstance.render(graphicsPipeline?.programSprite2D)
+
         galaxyInstance.render(graphicsPipeline?.programSprite2D)
+
     }
     override fun draw3DBloom(width: Int, height: Int) {
 

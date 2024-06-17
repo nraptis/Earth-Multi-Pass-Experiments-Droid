@@ -148,7 +148,6 @@ class GraphicsLibrary(activity: GraphicsActivity?,
 
     fun <T> floatBufferGenerate(array: Array<T>): FloatBuffer where T : FloatBufferable {
 
-
         // Calculate the total size needed for the buffer
         val totalSize = floatBufferSize(array)
 
@@ -164,7 +163,6 @@ class GraphicsLibrary(activity: GraphicsActivity?,
     }
 
     fun <T> floatBufferGenerate(list: List<T>): FloatBuffer where T : FloatBufferable {
-
 
         // Calculate the total size needed for the buffer
         val totalSize = floatBufferSize(list)
@@ -224,7 +222,11 @@ class GraphicsLibrary(activity: GraphicsActivity?,
             _floatBuffer.position(0)
 
             // Write each Bufferable's data to the buffer
-            list.forEach { it.writeToBuffer(_floatBuffer) }
+            list.forEach {
+
+
+                it.writeToBuffer(_floatBuffer)
+            }
 
             // Reset buffer position to the beginning
             _floatBuffer.position(0)
@@ -441,6 +443,8 @@ class GraphicsLibrary(activity: GraphicsActivity?,
 
     fun <T> linkBufferToShaderProgram(program: ShaderProgram?, buffer: GraphicsArrayBuffer<T>?) where T: FloatBufferable {
         buffer?.let { _buffer ->
+            linkBufferToShaderProgram(program, _buffer.bufferIndex)
+            /*
             program?.let { _program ->
 
                 if (_program.program == 0) {
@@ -478,7 +482,55 @@ class GraphicsLibrary(activity: GraphicsActivity?,
                 }
 
             }
+
+             */
         }
+    }
+
+    fun linkBufferToShaderProgram(program: ShaderProgram?, bufferIndex: Int) {
+
+        program?.let { _program ->
+
+            if (_program.program == 0) {
+                return
+            }
+
+            if (bufferIndex == -1) {
+                return
+            }
+
+            GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, bufferIndex)
+
+            GLES20.glUseProgram(_program.program)
+
+            if (_program.attributeLocationPosition != -1) {
+                GLES20.glEnableVertexAttribArray(_program.attributeLocationPosition)
+
+                GLES20.glVertexAttribPointer(
+                    _program.attributeLocationPosition,
+                    _program.attributeSizePosition,
+                    GLES20.GL_FLOAT,
+                    false,
+                    _program.attributeStridePosition,
+                    _program.attributeOffsetPosition
+                )
+            }
+
+            if (_program.attributeLocationTextureCoordinates != -1) {
+                GLES20.glEnableVertexAttribArray(_program.attributeLocationTextureCoordinates)
+
+                GLES20.glVertexAttribPointer(
+                    _program.attributeLocationTextureCoordinates,
+                    _program.attributeSizeTextureCoordinates,
+                    GLES20.GL_FLOAT,
+                    false,
+                    _program.attributeStrideTextureCoordinates,
+                    _program.attributeOffsetTextureCoordinates
+                )
+            }
+
+        }
+
     }
 
     fun unlinkBufferFromShaderProgram(program: ShaderProgram?) {
