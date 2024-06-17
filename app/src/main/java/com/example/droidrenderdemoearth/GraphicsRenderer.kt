@@ -221,7 +221,7 @@ class GraphicsRenderer(var scene: EarthScene?,
             scene?.draw3D(width, height)
         //}
 
-        
+
         surfaceView?.requestRender()
     }
 
@@ -232,34 +232,22 @@ class GraphicsRenderer(var scene: EarthScene?,
         val blurWidth = width / blurScale
         val blurHeight = height / blurScale
 
-        //
-        // I am not sure why these are the right numbers, why the y would be "height - blurHeight"
-        // if the ortho is (width x height). Frankly, it seems wrong to me, but it seems to work.
-        //
-
         val x1 = 0.0f
         val y1 = (height - blurHeight).toFloat()
         val x2 = blurWidth.toFloat()
-        val y2 = (height - blurHeight).toFloat()
-        val x3 = 0.0f
-        val y3 = (height).toFloat()
-        val x4 = blurWidth.toFloat()
-        val y4 = (height).toFloat()
+        val y2 = (height).toFloat()
 
-        renderTargetBloom.frameBufferSpriteInstance.setPositionQuad(x1, y1, x2, y2, x3, y3, x4, y4)
-        renderTargetBlur1.frameBufferSpriteInstance.setPositionQuad(x1, y1, x2, y2, x3, y3, x4, y4)
-        renderTargetBlur2.frameBufferSpriteInstance.setPositionQuad(x1, y1, x2, y2, x3, y3, x4, y4)
+        renderTargetBloom.frameBufferSpriteInstance.setPositionQuad(x1, y1, x2, y1, x1, y2, x2, y2)
+        renderTargetBlur1.frameBufferSpriteInstance.setPositionQuad(x1, y1, x2, y1, x1, y2, x2, y2)
+        renderTargetBlur2.frameBufferSpriteInstance.setPositionQuad(x1, y1, x2, y1, x1, y2, x2, y2)
 
-        //renderTargetBlur2.frameBufferSpriteInstance.setPositionQuad(0.0f, (height - blurHeight).toFloat(), (blurWidth).toFloat(), (blurHeight).toFloat())
         renderTargetBloom.frameBufferSpriteInstance.projectionMatrix.ortho((width).toFloat(), (height).toFloat())
         renderTargetBlur1.frameBufferSpriteInstance.projectionMatrix.ortho((width).toFloat(), (height).toFloat())
         renderTargetBlur2.frameBufferSpriteInstance.projectionMatrix.ortho((width).toFloat(), (height).toFloat())
 
-        // Render bloom (renderTargetBloom) onto the blur target (renderTargetBlur1)
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
         renderTargetBloom.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 
-        // Render blur target 1 (renderTargetBlur1) onto blur target 2 (renderTargetBlur2)
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur2.frameBufferIndex)
         renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 
@@ -278,90 +266,3 @@ class GraphicsRenderer(var scene: EarthScene?,
         GLES20.glViewport(0, 0, width, height)
     }
 }
-
-/*
-class MyRenderer : GLSurfaceView.Renderer {
-    private var frameBuffer: Int = 0
-    private var texture: Int = 0
-    private var renderBuffer: Int = 0
-
-    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
-        setupFramebuffer()
-    }
-
-    override fun onDrawFrame(gl: GL10?) {
-        // First pass: Render to texture
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffer)
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
-        // Render your scene here
-        renderScene()
-
-        // Second pass: Render the texture to the default framebuffer
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
-        renderTextureToScreen()
-    }
-
-    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        GLES20.glViewport(0, 0, width, height)
-    }
-
-    private fun setupFramebuffer() {
-        // Create framebuffer
-        val framebuffers = IntArray(1)
-        GLES20.glGenFramebuffers(1, framebuffers, 0)
-        frameBuffer = framebuffers[0]
-
-        // Create texture
-        val textures = IntArray(1)
-        GLES20.glGenTextures(1, textures, 0)
-        texture = textures[0]
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture)
-        GLES20.glTexImage2D(
-            GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
-            1024, 1024, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null
-        )
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
-        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
-
-        // Attach texture to framebuffer
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffer)
-        GLES20.glFramebufferTexture2D(
-            GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-            GLES20.GL_TEXTURE_2D, texture, 0
-        )
-
-        // Create renderbuffer for depth and stencil (optional)
-        val renderBuffers = IntArray(1)
-        GLES20.glGenRenderbuffers(1, renderBuffers, 0)
-        renderBuffer = renderBuffers[0]
-        GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, renderBuffer)
-        GLES20.glRenderbufferStorage(
-            GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, 1024, 1024
-        )
-        GLES20.glFramebufferRenderbuffer(
-            GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT,
-            GLES20.GL_RENDERBUFFER, renderBuffer
-        )
-
-        // Check if framebuffer is complete
-        val status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER)
-        if (status != GLES20.GL_FRAMEBUFFER_COMPLETE) {
-            throw RuntimeException("Framebuffer not complete: $status")
-        }
-
-        // Unbind framebuffer
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-    }
-
-    private fun renderScene() {
-        // Your scene rendering code goes here
-    }
-
-    private fun renderTextureToScreen() {
-        // Your code to render the texture to the screen goes here
-    }
-}
-*/
-
