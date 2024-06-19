@@ -8,10 +8,10 @@ interface IndexedInstanceable<NodeType : FloatBufferable> : IndexedDrawable<Node
 
             indexBuffer = _graphics.bufferIndexGenerate(indices)
 
-            vertexBuffer = _graphics.floatBufferGenerate(vertices)
+            vertexBuffer = _graphics.bufferFloatGenerate(vertices)
             vertexBuffer?.let { _vertexBuffer ->
 
-                val size = _graphics.floatBufferSize(vertices) * Float.SIZE_BYTES
+                val size = _graphics.bufferFloatSize(vertices) * Float.SIZE_BYTES
 
                 vertexBufferIndex = _graphics.bufferArrayGenerate(size)
                 _graphics.bufferArrayWrite(vertexBufferIndex, size, _vertexBuffer)
@@ -26,8 +26,8 @@ interface IndexedInstanceable<NodeType : FloatBufferable> : IndexedDrawable<Node
             vertices?.let { _vertices ->
                 vertexBuffer?.let { _vertexBuffer ->
                     println("write vertice: " + _vertices)
-                    _graphics.floatBufferWrite(_vertices, _vertexBuffer)
-                    val size = _graphics.floatBufferSize(_vertices) * Float.SIZE_BYTES
+                    _graphics.bufferFloatWrite(_vertices, _vertexBuffer)
+                    val size = _graphics.bufferFloatSize(_vertices) * Float.SIZE_BYTES
                     _graphics.bufferArrayWrite(vertexBufferIndex, size, _vertexBuffer)
                 }
             }

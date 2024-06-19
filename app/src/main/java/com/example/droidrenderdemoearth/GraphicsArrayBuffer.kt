@@ -20,8 +20,8 @@ class GraphicsArrayBuffer<T : FloatBufferable> {
             // You can access `graphics` safely inside this block
 
             array?.let { _array ->
-                size = _graphics.floatBufferSize(_array) * Float.SIZE_BYTES
-                vertexBuffer = _graphics.floatBufferGenerate(_array)
+                size = _graphics.bufferFloatSize(_array) * Float.SIZE_BYTES
+                vertexBuffer = _graphics.bufferFloatGenerate(_array)
                 bufferIndex = _graphics.bufferArrayGenerate(size)
                 vertexBuffer?.let {
                     _graphics.bufferArrayWrite(bufferIndex, size, it)
@@ -32,7 +32,7 @@ class GraphicsArrayBuffer<T : FloatBufferable> {
 
     fun write(array: Array<T>?) {
         array?.let { _array ->
-            graphics?.floatBufferWrite(_array, vertexBuffer)
+            graphics?.bufferFloatWrite(_array, vertexBuffer)
             graphics?.bufferArrayWrite(bufferIndex, size, vertexBuffer)
         }
     }

@@ -167,22 +167,61 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         }
     }
 
-    fun <T> floatBufferGenerate(item: T): FloatBuffer where T : FloatBufferable {
+    fun bufferIndexWrite(array: IntArray, intBuffer: IntBuffer?, count: Int) {
+        intBuffer?.let { _intBuffer ->
+            // Reset buffer position to the beginning
+            _intBuffer.position(0)
 
+            // Write each element from the array to the buffer, up to 'count' elements
+            val ceiling = minOf(array.size, count)
+            for (i in 0 until ceiling) {
+                _intBuffer.put(array[i])
+            }
+
+            // Reset buffer position to the beginning
+            _intBuffer.position(0)
+        }
+    }
+
+    fun <T> bufferFloatGenerate(item: T): FloatBuffer where T : FloatBufferable {
         val totalSize = item.size()
-        val result = ByteBuffer.allocateDirect(totalSize * Float.SIZE_BYTES).run {
-            order(ByteOrder.nativeOrder())
-            asFloatBuffer()
-        }
-        floatBufferWrite(item, result)
+        val byteCount = totalSize * Float.SIZE_BYTES
+
+        // Allocate the buffer memory
+        val result = bufferFloatGenerate(byteCount)
+        bufferFloatWrite(item, result)
 
         return result
     }
 
-    fun <T> floatBufferGenerate(array: Array<T>): FloatBuffer where T : FloatBufferable {
+    fun <T> bufferFloatGenerate(array: Array<T>): FloatBuffer where T : FloatBufferable {
 
         // Calculate the total size needed for the buffer
-        val totalSize = floatBufferSize(array)
+        val totalSize = bufferFloatSize(array)
+        val byteCount = totalSize * Float.SIZE_BYTES
+
+        // Allocate the buffer memory
+        val result = bufferFloatGenerate(byteCount)
+        bufferFloatWrite(array, result)
+
+        return result
+    }
+
+    fun bufferFloatGenerate(byteCount: Int): FloatBuffer {
+
+        // Allocate the buffer memory
+        val result = ByteBuffer.allocateDirect(byteCount).run {
+            // Use native byte order
+            order(ByteOrder.nativeOrder())
+            asFloatBuffer()
+        }
+        return result
+    }
+
+    fun <T> bufferFloatGenerate(list: List<T>): FloatBuffer where T : FloatBufferable {
+
+        // Calculate the total size needed for the buffer
+        val totalSize = bufferFloatSize(list)
 
         // Allocate the buffer memory
         val result = ByteBuffer.allocateDirect(totalSize * Float.SIZE_BYTES).run {
@@ -190,28 +229,12 @@ class GraphicsLibrary(activity: GraphicsActivity?,
             order(ByteOrder.nativeOrder())
             asFloatBuffer()
         }
-        floatBufferWrite(array, result)
+        bufferFloatWrite(list, result)
 
         return result
     }
 
-    fun <T> floatBufferGenerate(list: List<T>): FloatBuffer where T : FloatBufferable {
-
-        // Calculate the total size needed for the buffer
-        val totalSize = floatBufferSize(list)
-
-        // Allocate the buffer memory
-        val result = ByteBuffer.allocateDirect(totalSize * Float.SIZE_BYTES).run {
-            // Use native byte order
-            order(ByteOrder.nativeOrder())
-            asFloatBuffer()
-        }
-        floatBufferWrite(list, result)
-
-        return result
-    }
-
-    fun <T> floatBufferSize(array: Array<T>): Int where T : FloatBufferable {
+    fun <T> bufferFloatSize(array: Array<T>): Int where T : FloatBufferable {
         // Assume all elements in the array have the same size
         var elementSize = 0
 
@@ -222,7 +245,7 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         return array.size * elementSize
     }
 
-    fun <T> floatBufferSize(list: List<T>): Int where T : FloatBufferable {
+    fun <T> bufferFloatSize(list: List<T>): Int where T : FloatBufferable {
         // Assume all elements in the array have the same size
         var elementSize = 0
 
@@ -234,7 +257,7 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         return list.size * elementSize
     }
 
-    fun <T> floatBufferWrite(array: Array<T>, floatBuffer: FloatBuffer?) where T : FloatBufferable {
+    fun <T> bufferFloatWrite(array: Array<T>, floatBuffer: FloatBuffer?) where T : FloatBufferable {
 
         floatBuffer?.let { _floatBuffer ->
             // Reset buffer position to the beginning
@@ -248,7 +271,7 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         }
     }
 
-    fun <T> floatBufferWrite(list: List<T>, floatBuffer: FloatBuffer?) where T : FloatBufferable {
+    fun <T> bufferFloatWrite(list: List<T>, floatBuffer: FloatBuffer?) where T : FloatBufferable {
 
         floatBuffer?.let { _floatBuffer ->
             // Reset buffer position to the beginning
@@ -265,7 +288,24 @@ class GraphicsLibrary(activity: GraphicsActivity?,
             _floatBuffer.position(0)
         }
     }
-    fun <T> floatBufferWrite(item: T, floatBuffer: FloatBuffer?) where T : FloatBufferable {
+
+    fun <T> bufferFloatWrite(list: List<T>, floatBuffer: FloatBuffer?, count: Int) where T : FloatBufferable {
+        floatBuffer?.let { _floatBuffer ->
+            // Reset buffer position to the beginning
+            _floatBuffer.position(0)
+
+            // Write each FloatBufferable's data to the buffer, up to 'count' elements
+            val ceiling = minOf(list.size, count)
+            for (i in 0 until ceiling) {
+                list[i].writeToBuffer(_floatBuffer)
+            }
+
+            // Reset buffer position to the beginning
+            _floatBuffer.position(0)
+        }
+    }
+
+    fun <T> bufferFloatWrite(item: T, floatBuffer: FloatBuffer?) where T : FloatBufferable {
 
         floatBuffer?.let { _floatBuffer ->
             // Reset buffer position to the beginning

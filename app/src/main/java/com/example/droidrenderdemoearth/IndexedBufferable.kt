@@ -1,7 +1,5 @@
 package com.example.droidrenderdemoearth
 
-import java.nio.FloatBuffer
-
 interface IndexedBufferable<NodeType : FloatBufferable> : IndexedDrawable<NodeType> {
 
     var vertexCount: Int
@@ -143,38 +141,35 @@ interface IndexedBufferable<NodeType : FloatBufferable> : IndexedDrawable<NodeTy
 
     fun load(graphics: GraphicsLibrary?) {
         this.graphics = graphics
-        graphics?.let { _graphics ->
-
-
-            indices?.let { _indices ->
-                indexBuffer = _graphics.bufferIndexGenerate(_indices)
-            }
-
-            vertices?.let { _vertices ->
-                vertexBuffer = _graphics.floatBufferGenerate(_vertices)
-                vertexBuffer?.let { _vertexBuffer ->
-
-                    val size = _graphics.floatBufferSize(_vertices) * Float.SIZE_BYTES
-
-                    vertexBufferIndex = _graphics.bufferArrayGenerate(size)
-                    _graphics.bufferArrayWrite(vertexBufferIndex, size, _vertexBuffer)
-                }
-            }
-        }
     }
 
     fun writeVertexBuffer() {
-        println("writeVertexBuffer =>")
+
         graphics?.let { _graphics ->
-            vertices?.let { _vertices ->
-                vertexBuffer?.let { _vertexBuffer ->
-                    println("write vertice: " + _vertices)
-                    _graphics.floatBufferWrite(_vertices, _vertexBuffer)
-                    val size = _graphics.floatBufferSize(_vertices) * Float.SIZE_BYTES
-                    _graphics.bufferArrayWrite(vertexBufferIndex, size, _vertexBuffer)
+
+            if (vertexCount <= 0) {
+                vertexBufferLength = 0
+                return
+            }
+
+            val bytesPerItem = vertices[0].size() * Float.SIZE_BYTES
+            val length = bytesPerItem * vertexCount
+
+            if (vertexBuffer != null) {
+                if (length > vertexBufferLength) {
+                    vertexBufferLength = bytesPerItem * vertexCapacity
+                    vertexBuffer = _graphics.bufferFloatGenerate(vertexBufferLength)
+                    _graphics.bufferFloatWrite(vertices, vertexBuffer, vertexCount)
+                } else {
+                    _graphics.bufferFloatWrite(vertices, vertexBuffer, vertexCount)
                 }
+            } else {
+                vertexBufferLength = bytesPerItem * vertexCapacity
+                vertexBuffer = _graphics.bufferFloatGenerate(vertexBufferLength)
+                _graphics.bufferFloatWrite(vertices, vertexBuffer, vertexCount)
             }
         }
+
     }
 
 }
