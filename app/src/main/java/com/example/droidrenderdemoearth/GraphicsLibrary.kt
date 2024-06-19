@@ -60,13 +60,11 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         textureSetClamp()
     }
 
-    fun bufferArrayGenerate(length: Int): Int {
-        if (length > 0) {
+    fun bufferArrayGenerate(): Int {
             val bufferHandle = IntArray(1)
             GLES20.glGenBuffers(1, bufferHandle, 0)
             return bufferHandle[0]
-        }
-        return -1
+
     }
 
     fun bufferArrayDelete(index: Int) {
@@ -149,10 +147,20 @@ class GraphicsLibrary(activity: GraphicsActivity?,
     }
 
     fun bufferIndexGenerate(array: IntArray): IntBuffer {
-        val result = ByteBuffer.allocateDirect(array.size * Int.SIZE_BYTES)
-            .order(ByteOrder.nativeOrder())
-            .asIntBuffer()
+        val byteCount = array.size * Int.SIZE_BYTES
+        val result = bufferIndexGenerate(byteCount)
         bufferIndexWrite(array, result)
+        return result
+    }
+
+    fun bufferIndexGenerate(byteCount: Int): IntBuffer {
+
+        // Allocate the buffer memory
+        val result = ByteBuffer.allocateDirect(byteCount).run {
+            // Use native byte order
+            order(ByteOrder.nativeOrder())
+            asIntBuffer()
+        }
         return result
     }
 
@@ -176,6 +184,22 @@ class GraphicsLibrary(activity: GraphicsActivity?,
             val ceiling = minOf(array.size, count)
             for (i in 0 until ceiling) {
                 _intBuffer.put(array[i])
+            }
+
+            // Reset buffer position to the beginning
+            _intBuffer.position(0)
+        }
+    }
+
+    fun bufferIndexWrite(list: List<Int>, intBuffer: IntBuffer?, count: Int) {
+        intBuffer?.let { _intBuffer ->
+            // Reset buffer position to the beginning
+            _intBuffer.position(0)
+
+            // Write each element from the array to the buffer, up to 'count' elements
+            val ceiling = minOf(list.size, count)
+            for (i in 0 until ceiling) {
+                _intBuffer.put(list[i])
             }
 
             // Reset buffer position to the beginning
@@ -501,7 +525,6 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         GLES20.glDisable(GLES20.GL_BLEND)
     }
 
-
     fun drawTriangles(indexBuffer: IntBuffer, count: Int) {
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, count, GLES20.GL_UNSIGNED_INT, indexBuffer)
     }
@@ -512,6 +535,9 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         }
     }
 
+    fun drawPrimitives(indexBuffer: IntBuffer, primitiveType: Int, count: Int) {
+        GLES20.glDrawElements(primitiveType, count, GLES20.GL_UNSIGNED_INT, indexBuffer)
+    }
 
 
     fun <T> linkBufferToShaderProgram(program: ShaderProgram?, buffer: GraphicsArrayBuffer<T>?) where T: FloatBufferable {

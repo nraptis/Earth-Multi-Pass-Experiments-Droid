@@ -13,7 +13,7 @@ interface IndexedInstanceable<NodeType : FloatBufferable> : IndexedDrawable<Node
 
                 val size = _graphics.bufferFloatSize(vertices) * Float.SIZE_BYTES
 
-                vertexBufferIndex = _graphics.bufferArrayGenerate(size)
+                vertexBufferIndex = _graphics.bufferArrayGenerate()
                 _graphics.bufferArrayWrite(vertexBufferIndex, size, _vertexBuffer)
             }
 

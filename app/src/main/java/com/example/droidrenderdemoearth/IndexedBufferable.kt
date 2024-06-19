@@ -11,10 +11,15 @@ interface IndexedBufferable<NodeType : FloatBufferable> : IndexedDrawable<NodeTy
     var vertexBufferLength: Int
     var indexBufferLength: Int
 
+    var isIndexBufferDirty: Boolean
+
+    var primitiveType: Int
+
     fun reset() {
         vertexCount = 0
         indexCount = 0
         isVertexBufferDirty = true
+        isIndexBufferDirty = true
     }
 
     fun add(vertex: NodeType) {
@@ -59,6 +64,7 @@ interface IndexedBufferable<NodeType : FloatBufferable> : IndexedDrawable<NodeTy
         }
         indices[indexCount] = index
         indexCount += 1
+        isIndexBufferDirty = true
     }
 
     fun add(index1: Int, index2: Int, index3: Int) {
@@ -70,6 +76,7 @@ interface IndexedBufferable<NodeType : FloatBufferable> : IndexedDrawable<NodeTy
         indices[indexCount + 1] = index2
         indices[indexCount + 2] = index3
         indexCount += 3
+        isIndexBufferDirty = true
     }
 
     fun addTriangleIndices(startingAt: Int): Int {
@@ -81,6 +88,7 @@ interface IndexedBufferable<NodeType : FloatBufferable> : IndexedDrawable<NodeTy
         indices[indexCount + 1] = startingAt + 1
         indices[indexCount + 2] = startingAt + 2
         indexCount += 3
+        isIndexBufferDirty = true
         return startingAt + 3
     }
 
@@ -96,6 +104,7 @@ interface IndexedBufferable<NodeType : FloatBufferable> : IndexedDrawable<NodeTy
         indices[indexCount + 4] = startingAt + 3
         indices[indexCount + 5] = startingAt + 2
         indexCount += 6
+        isIndexBufferDirty = true
         return startingAt + 4
     }
 
@@ -118,6 +127,7 @@ interface IndexedBufferable<NodeType : FloatBufferable> : IndexedDrawable<NodeTy
         indices[indexCount + 1] = startingAt + 1
         indices[indexCount + 2] = startingAt + 2
         indexCount += 3
+        isIndexBufferDirty = true
         return startingAt + 3
     }
 
@@ -157,19 +167,53 @@ interface IndexedBufferable<NodeType : FloatBufferable> : IndexedDrawable<NodeTy
 
             if (vertexBuffer != null) {
                 if (length > vertexBufferLength) {
+
                     vertexBufferLength = bytesPerItem * vertexCapacity
                     vertexBuffer = _graphics.bufferFloatGenerate(vertexBufferLength)
                     _graphics.bufferFloatWrite(vertices, vertexBuffer, vertexCount)
+                    _graphics.bufferArrayWrite(vertexBufferIndex, length, vertexBuffer)
+
                 } else {
                     _graphics.bufferFloatWrite(vertices, vertexBuffer, vertexCount)
+                    _graphics.bufferArrayWrite(vertexBufferIndex, length, vertexBuffer)
                 }
             } else {
                 vertexBufferLength = bytesPerItem * vertexCapacity
                 vertexBuffer = _graphics.bufferFloatGenerate(vertexBufferLength)
                 _graphics.bufferFloatWrite(vertices, vertexBuffer, vertexCount)
+
+                vertexBufferIndex = _graphics.bufferArrayGenerate()
+                _graphics.bufferArrayWrite(vertexBufferIndex, length, vertexBuffer)
+
             }
         }
-
     }
 
+    fun writeIndexBuffer() {
+
+        graphics?.let { _graphics ->
+
+            if (indexCount <= 0) {
+                indexBufferLength = 0
+                return
+            }
+
+            val bytesPerItem = vertices[0].size() * Int.SIZE_BYTES
+            val length = bytesPerItem * indexCount
+
+            if (indexBuffer != null) {
+                if (length > indexBufferLength) {
+                    indexBufferLength = bytesPerItem * indexCapacity
+                    indexBuffer = _graphics.bufferIndexGenerate(indexBufferLength)
+                    _graphics.bufferIndexWrite(indices, indexBuffer, indexCount)
+                } else {
+                    _graphics.bufferIndexWrite(indices, indexBuffer, indexCount)
+                }
+            } else {
+                indexBufferLength = bytesPerItem * indexCapacity
+                indexBuffer = _graphics.bufferIndexGenerate(indexBufferLength)
+                _graphics.bufferIndexWrite(indices, indexBuffer, indexCount)
+            }
+        }
+    }
 }

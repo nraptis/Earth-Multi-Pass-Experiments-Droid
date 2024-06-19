@@ -31,18 +31,12 @@ class EarthScene(
 
     var galaxyInstance = IndexedSpriteInstance3D()
 
-    var blahInstane = GraphicsSprite2DInstance()
-    var davidBlane = GraphicsSprite3DInstance()
 
-    var blahInstane2 = GraphicsSprite2DInstance()
-    var davidBlane2 = GraphicsSprite3DInstance()
-
-    var testShape1 = GraphicsShape2DInstance()
-    var testShape2 = GraphicsShape3DInstance()
 
     override fun initialize(config: EGLConfig) {
         println("EarthScene => initialize")
 
+        earth = Earth(graphics, graphicsPipeline)
 
     }
 
@@ -57,6 +51,9 @@ class EarthScene(
         galaxyMap.load(graphics, galaxyMapTexture)
         lightMap.load(graphics, lightMapTexture)
 
+
+        earth?.load(graphics, graphicsPipeline, earthMap, lightMap)
+
         /*
         galaxyInstance.load(graphics, galaxyMap)
         galaxyInstance.projectionMatrix.ortho(width, height)
@@ -70,40 +67,13 @@ class EarthScene(
         val projectionMatrix = Matrix()
         projectionMatrix.ortho(width, height)
 
-        galaxyInstance.load(graphics, lightMap)
+        galaxyInstance.load(graphics, galaxyMap)
         galaxyInstance.projectionMatrix.ortho(width, height)
         galaxyInstance.setPositionQuad(0.0f, 0.0f,
             width.toFloat(), 0.0f,
             0.0f, height.toFloat(),
             width.toFloat(), height.toFloat())
 
-
-        blahInstane.load(graphics, earthMap)
-        blahInstane.projectionMatrix.ortho(width, height)
-
-        davidBlane.load(graphics, earthMap)
-        davidBlane.projectionMatrix.ortho(width, height)
-
-
-
-
-
-        blahInstane2.load(graphics, earthMap)
-        blahInstane2.projectionMatrix.ortho(width, height)
-
-        davidBlane2.load(graphics, earthMap)
-        davidBlane2.projectionMatrix.ortho(width, height)
-
-
-
-        testShape1.load(graphics)
-        testShape1.projectionMatrix.ortho(width, height)
-        testShape1.setPositionFrame(100.0f, 100.0f, 100.0f, 300.0f)
-
-
-        testShape2.load(graphics)
-        testShape2.projectionMatrix.ortho(width, height)
-        testShape2.setPositionFrame(300.0f, 400.0f, 100.0f, 600.0f)
 
     }
 

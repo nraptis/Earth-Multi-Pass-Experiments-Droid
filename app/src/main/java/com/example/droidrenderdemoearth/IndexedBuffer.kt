@@ -1,9 +1,10 @@
 package com.example.droidrenderdemoearth
 
+import android.opengl.GLES20
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
-class IndexedBuffer<NodeType>(
+open class IndexedBuffer<NodeType>(
     override var uniformsVertex: UniformsVertex,
     override var uniformsFragment: UniformsFragment
 ) : IndexedBufferable<NodeType> where NodeType : FloatBufferable, NodeType: PositionConforming2D {
@@ -30,9 +31,15 @@ class IndexedBuffer<NodeType>(
     var uniformsFragmentBuffer: FloatBuffer? = null
 
     override var isVertexBufferDirty: Boolean = false
-    var isIndexBufferDirty: Boolean = false
+    override var isIndexBufferDirty: Boolean = false
+
+    override var primitiveType: Int = GLES20.GL_TRIANGLES
+
     var isUniformsVertexBufferDirty: Boolean = false
     var isUniformsFragmentBufferDirty: Boolean = false
+
+
+
 
     override fun link(shaderProgram: ShaderProgram?) {
         // Implementation for linking shader program
@@ -40,6 +47,49 @@ class IndexedBuffer<NodeType>(
 
     override fun render(shaderProgram: ShaderProgram?) {
         // Implementation for rendering
+        graphics?.let { _graphics ->
+
+            print("ISB indexCount = " + indexCount)
+            print("ISB vertexCount = " + vertexCount)
+
+
+            if (indexCount <= 0) { return }
+            if (vertexCount <= 0) { return }
+
+            print("ISB isVertexBufferDirty = " + isVertexBufferDirty)
+            print("ISB isIndexBufferDirty = " + isIndexBufferDirty)
+
+            if (isVertexBufferDirty) {
+                writeVertexBuffer()
+                isVertexBufferDirty = false
+            }
+
+            if (isIndexBufferDirty) {
+                writeIndexBuffer()
+                isIndexBufferDirty = false
+            }
+
+            vertexBuffer?.let { _vertexBuffer ->
+                print("ISB _vertexBuffer alive...")
+                indexBuffer?.let { _indexBuffer ->
+
+                    print("ISB _indexBuffer alive...")
+
+                    _graphics.linkBufferToShaderProgram(shaderProgram, vertexBufferIndex)
+
+                    //_graphics.uniformsTextureSet(shaderProgram, sprite)
+
+                    link(shaderProgram)
+
+                    uniformsVertex.link(graphics, shaderProgram)
+                    uniformsFragment.link(graphics, shaderProgram)
+
+                    _graphics.drawPrimitives(_indexBuffer, primitiveType, indexCount)
+                    _graphics.unlinkBufferFromShaderProgram (shaderProgram)
+                }
+            }
+        }
+
     }
 
 }

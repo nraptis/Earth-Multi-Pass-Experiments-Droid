@@ -32,8 +32,8 @@ class EarthModelData(width: Float, height: Float) {
                 var point = Float3(0.0f, 1.0f, 0.0f)
                 point = Math.rotateX(point, _angleV)
                 point = Math.rotateY(point, _angleH)
-                _points[indexH][indexV].x = point.x * radius - 200.0f
-                _points[indexH][indexV].y = point.y * radius + 100.0f
+                _points[indexH][indexV].x = point.x * radius
+                _points[indexH][indexV].y = point.y * radius
                 _points[indexH][indexV].z = point.z * radius
                 _normals[indexH][indexV].x = point.x
                 _normals[indexH][indexV].y = point.y

@@ -22,7 +22,7 @@ class GraphicsArrayBuffer<T : FloatBufferable> {
             array?.let { _array ->
                 size = _graphics.bufferFloatSize(_array) * Float.SIZE_BYTES
                 vertexBuffer = _graphics.bufferFloatGenerate(_array)
-                bufferIndex = _graphics.bufferArrayGenerate(size)
+                bufferIndex = _graphics.bufferArrayGenerate()
                 vertexBuffer?.let {
                     _graphics.bufferArrayWrite(bufferIndex, size, it)
                 }

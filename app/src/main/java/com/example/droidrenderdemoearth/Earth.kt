@@ -1,13 +1,15 @@
 package com.example.droidrenderdemoearth
 
 class Earth(var graphics: GraphicsLibrary?,
-            var graphicsPipeline: GraphicsPipeline?,
-            var texture: GraphicsTexture?) {
+            var graphicsPipeline: GraphicsPipeline?) {
 
     var earthModelData: EarthModelData
     var earthModelDataStrips: Array<EarthModelDataStrip>
     var width = 800.0f
     var height = 1200.0f
+
+    var earthMap: Sprite? = null
+    var lightMap: Sprite? = null
 
     init {
         //this.graphics = graphics
@@ -18,13 +20,19 @@ class Earth(var graphics: GraphicsLibrary?,
         //earthModelData = EarthModelData((graphics?.widthf ?: 320.0f) * 1.5f,(graphics?.heightf ?: 320.0f) * 2.0f)
 
         earthModelDataStrips = Array<EarthModelDataStrip>(EarthModelData.tileCountV) {
-            EarthModelDataStrip(earthModelData, it + 1, graphics, graphicsPipeline, texture)
+            EarthModelDataStrip(earthModelData, it + 1, graphics, graphicsPipeline)
         }
     }
 
     fun load(graphics: GraphicsLibrary?,
-             graphicsPipeline: GraphicsPipeline?) {
-
+             graphicsPipeline: GraphicsPipeline?,
+             earthMap: Sprite,
+             lightMap: Sprite) {
+        this.earthMap = earthMap
+        this.lightMap = lightMap
+        for (earthModelDataStrip in earthModelDataStrips) {
+            earthModelDataStrip.load(graphics, earthMap, lightMap)
+        }
     }
 
     fun updateStereo(radians: Float, stereoSpreadBase: Float, stereoSpreadMax: Float) {

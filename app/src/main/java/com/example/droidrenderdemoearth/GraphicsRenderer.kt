@@ -60,11 +60,7 @@ class GraphicsRenderer(var scene: EarthScene?,
         get() = activityRef.get()
 
 
-    private lateinit var earth: Earth
 
-    val starBackground = GraphicsTexture()
-    val earthMap = GraphicsTexture()
-    val testTexture = GraphicsTexture()
 
     private val blurScale = 4
 
@@ -148,16 +144,8 @@ class GraphicsRenderer(var scene: EarthScene?,
 
         //frameBufferSpriteInstance.setPositionFrame(0.0f, 0.0f, width.toFloat(), height.toFloat())
 
-        earth = Earth(graphics, graphicsPipeline, earthMap)
-
-        scene?.earth = earth
         scene?.load()
         scene?.loadComplete()
-
-
-        starBackground.load(context, graphics, "galaxy.jpg")
-        earthMap.load(context, graphics, "earth_texture.jpg")
-        testTexture.load(context, graphics, "test.png")
 
     }
 
