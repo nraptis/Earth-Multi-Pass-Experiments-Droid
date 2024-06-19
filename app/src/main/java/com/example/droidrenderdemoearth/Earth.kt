@@ -1,6 +1,9 @@
 package com.example.droidrenderdemoearth
 
-class Earth(var graphics: GraphicsLibrary?,
+import android.content.Context
+
+class Earth(var context: Context?,
+            var graphics: GraphicsLibrary?,
             var graphicsPipeline: GraphicsPipeline?) {
 
     var earthModelData: EarthModelData
@@ -20,7 +23,8 @@ class Earth(var graphics: GraphicsLibrary?,
         //earthModelData = EarthModelData((graphics?.widthf ?: 320.0f) * 1.5f,(graphics?.heightf ?: 320.0f) * 2.0f)
 
         earthModelDataStrips = Array<EarthModelDataStrip>(EarthModelData.tileCountV) {
-            EarthModelDataStrip(earthModelData, it + 1, graphics, graphicsPipeline)
+            EarthModelDataStrip(context,
+                earthModelData, it + 1, graphics, graphicsPipeline)
         }
     }
 
@@ -35,9 +39,17 @@ class Earth(var graphics: GraphicsLibrary?,
         }
     }
 
-    fun updateStereo(radians: Float, stereoSpreadBase: Float, stereoSpreadMax: Float) {
+    fun updateStereo(radians: Float,
+                     stereoSpreadBase: Float,
+                     stereoSpreadMax: Float,
+                     ticksConsumed: Int) {
         for (earthModelDataStrip in earthModelDataStrips) {
-            earthModelDataStrip.updateStereo(radians, width, height, stereoSpreadBase, stereoSpreadMax)
+            earthModelDataStrip.updateStereo(radians,
+                width,
+                height,
+                stereoSpreadBase,
+                stereoSpreadMax,
+                ticksConsumed)
         }
     }
 

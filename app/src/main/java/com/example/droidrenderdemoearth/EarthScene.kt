@@ -3,6 +3,7 @@ package com.example.droidrenderdemoearth
 import android.content.Context
 import java.nio.IntBuffer
 import javax.microedition.khronos.egl.EGLConfig
+import kotlin.random.Random
 
 class EarthScene(
     override var width: Int,
@@ -36,7 +37,7 @@ class EarthScene(
     override fun initialize(config: EGLConfig) {
         println("EarthScene => initialize")
 
-        earth = Earth(graphics, graphicsPipeline)
+        earth = Earth(context, graphics, graphicsPipeline)
 
     }
 
@@ -82,10 +83,38 @@ class EarthScene(
 
     }
 
+
+    var earthRotation = Math.pi
+    var lightRotation = Math.pi_4
+    var ticksConsumed = 1
+
     override fun update(deltaTime: Float) {
         //println("EarthScene => update ( " + deltaTime + " )")
 
+        if (Random.nextInt(32) == 0) {
+            ticksConsumed += 1
+        }
+
+        earthRotation += deltaTime * 0.4f
+        if (earthRotation >= Math.pi2) {
+            earthRotation -= Math.pi2
+        }
+
+        lightRotation -= deltaTime * 0.2f
+        if (lightRotation < 0.0f) {
+            lightRotation += Math.pi2
+        }
+
+        earth?.let {
+            it.updateStereo(earthRotation,
+                GraphicsActivity.stereoSpreadBase,
+                GraphicsActivity.stereoSpreadMax,
+                ticksConsumed)
+        }
+
     }
+
+
 
     //fun
     override fun draw3DPrebloom(width: Int, height: Int) {

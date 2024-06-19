@@ -240,7 +240,7 @@ class GraphicsRenderer(var scene: EarthScene?,
         renderTargetBlur1.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 
         activity?.let { _activity ->
-            for (i in 1 until _activity.bloomPasses) {
+            for (i in 1 until GraphicsActivity.bloomPasses) {
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderTargetBlur1.frameBufferIndex)
                 renderTargetBlur2.frameBufferSpriteInstance.render(graphicsPipeline?.programBlurHorizontal)
 

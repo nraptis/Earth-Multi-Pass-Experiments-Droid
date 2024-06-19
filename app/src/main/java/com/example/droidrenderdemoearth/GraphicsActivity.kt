@@ -13,18 +13,26 @@ class GraphicsActivity : Activity() {
     private lateinit var gLView: GLSurfaceView
 
     companion object {
-        fun isTablet(context: Context): Boolean {
-            return ((context.resources.configuration.screenLayout
-                    and Configuration.SCREENLAYOUT_SIZE_MASK)
-                    >= Configuration.SCREENLAYOUT_SIZE_LARGE)
+
+        var isStereoscopicEnabled = false
+        var isBloomEnabled = true
+        var bloomPasses = 6
+        var stereoSpreadBase = 3.0f
+        var stereoSpreadMax = 9.0f
+
+        fun isTablet(context: Context?): Boolean {
+            context?.let { _context ->
+                val sizeData =
+                    (_context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK)
+                if (sizeData >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+                    return true
+                }
+            }
+            return false
         }
     }
 
-    var isStereoscopicEnabled = false
-    var isBloomEnabled = true
-    var bloomPasses = 6
-    var stereoSpreadBase = 3.0f
-    var stereoSpreadMax = 9.0f
+
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

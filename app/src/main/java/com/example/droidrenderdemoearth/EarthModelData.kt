@@ -2,6 +2,8 @@ package com.example.droidrenderdemoearth
 
 import kotlin.math.min
 
+// TODO: We can entirely remove this.
+
 class EarthModelData(width: Float, height: Float) {
 
     companion object {
