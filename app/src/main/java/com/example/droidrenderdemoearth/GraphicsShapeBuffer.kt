@@ -1,6 +1,5 @@
 package com.example.droidrenderdemoearth
 
-import android.icu.text.Transliterator.Position
 import java.nio.IntBuffer
 
 //class GraphicsShapeBuffer {
@@ -30,7 +29,7 @@ open class GraphicsShapeBuffer<T>() where T : PositionConforming2D, T: FloatBuff
              indices: IntArray) {
         this.graphics = graphics
         this.graphicsArrayBuffer = graphicsArrayBuffer
-        indexBuffer = graphics?.indexBufferGenerate(indices)
+        indexBuffer = graphics?.bufferIndexGenerate(indices)
         indexCount = indices.size
     }
 

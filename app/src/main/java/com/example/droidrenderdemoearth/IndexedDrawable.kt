@@ -10,10 +10,10 @@ interface IndexedDrawable<NodeType> where NodeType : FloatBufferable {
     var uniformsVertex: UniformsVertex
     var uniformsFragment: UniformsFragment
 
-    var indices: IntArray?
+    var indices: MutableList<Int>
     var indexBuffer: IntBuffer?
 
-    var vertices: List<NodeType>?
+    var vertices: MutableList<NodeType>
     var vertexBuffer: FloatBuffer?
     var vertexBufferIndex: Int
 

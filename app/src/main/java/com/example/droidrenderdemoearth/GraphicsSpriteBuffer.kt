@@ -34,7 +34,7 @@ open class GraphicsSpriteBuffer<T>() where T : PositionConforming2D, T: TextureC
         this.graphics = graphics
         this.graphicsArrayBuffer = graphicsArrayBuffer
         this.texture = texture
-        indexBuffer = graphics?.indexBufferGenerate(indices)
+        indexBuffer = graphics?.bufferIndexGenerate(indices)
         indexCount = indices.size
     }
 

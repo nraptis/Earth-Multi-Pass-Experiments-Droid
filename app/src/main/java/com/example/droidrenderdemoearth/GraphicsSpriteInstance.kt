@@ -83,7 +83,7 @@ open class GraphicsSpriteInstance<T>(val vertexArray: Array<T>) where T : Positi
     fun load(graphics: GraphicsLibrary?, sprite: Sprite?) {
         this.graphics = graphics
         this.sprite = sprite
-        indexBuffer = graphics?.indexBufferGenerate(indices)
+        indexBuffer = graphics?.bufferIndexGenerate(indices)
         graphicsArrayBuffer.load(graphics, vertexArray)
         isVertexBufferDirty = false
     }

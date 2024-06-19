@@ -66,7 +66,7 @@ open class GraphicsShapeInstance<T>(val vertexArray: Array<T>) where T : Positio
 
     fun load(graphics: GraphicsLibrary?) {
         this.graphics = graphics
-        indexBuffer = graphics?.indexBufferGenerate(indices)
+        indexBuffer = graphics?.bufferIndexGenerate(indices)
         graphicsArrayBuffer.load(graphics, vertexArray)
         isVertexBufferDirty = false
     }

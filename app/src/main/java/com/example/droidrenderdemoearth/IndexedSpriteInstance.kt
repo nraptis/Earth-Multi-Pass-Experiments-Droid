@@ -5,25 +5,14 @@ import java.nio.IntBuffer
 import kotlin.random.Random
 
 open class IndexedSpriteInstance<NodeType>(
+    node1: NodeType,
+    node2: NodeType,
+    node3: NodeType,
+    node4: NodeType,
     uniformsVertex: UniformsVertex,
     uniformsFragment: UniformsFragment
-) : IndexedInstance<NodeType>(uniformsVertex, uniformsFragment)
+) : IndexedInstance<NodeType>(node1, node2, node3, node4, uniformsVertex, uniformsFragment)
         where NodeType : PositionConforming2D, NodeType : TextureCoordinateConforming, NodeType : FloatBufferable {
-
-    constructor(
-
-        uniformsVertex: UniformsVertex,
-        uniformsFragment: UniformsFragment,
-        node1: NodeType,
-        node2: NodeType,
-        node3: NodeType,
-        node4: NodeType
-    ) : this(
-        uniformsVertex,
-        uniformsFragment
-    ) {
-        vertices = listOf(node1, node2, node3, node4)
-    }
 
     var sprite: Sprite? = null
 
@@ -58,16 +47,18 @@ open class IndexedSpriteInstance<NodeType>(
     }
 }
 
-class IndexedSpriteInstance2D: IndexedSpriteInstance<Sprite2DVertex>(UniformsSpriteVertex(),
-    UniformsSpriteFragment(),
+class IndexedSpriteInstance2D: IndexedSpriteInstance<Sprite2DVertex>(
     Sprite2DVertex(-128.0f, -128.0f, 0.0f, 0.0f),
     Sprite2DVertex(128.0f, -128.0f, 1.0f, 0.0f),
     Sprite2DVertex(-128.0f, 128.0f, 0.0f, 1.0f),
-    Sprite2DVertex(128.0f, 128.0f, 1.0f, 1.0f))
+    Sprite2DVertex(128.0f, 128.0f, 1.0f, 1.0f),
+    UniformsSpriteVertex(),
+    UniformsSpriteFragment())
 
-class IndexedSpriteInstance3D: IndexedSpriteInstance<Sprite3DVertex>(UniformsSpriteVertex(),
-    UniformsSpriteFragment(),
+class IndexedSpriteInstance3D: IndexedSpriteInstance<Sprite3DVertex>(
     Sprite3DVertex(-128.0f, -128.0f, 0.0f,0.0f, 0.0f),
     Sprite3DVertex(128.0f, -128.0f, 0.0f,1.0f, 0.0f),
     Sprite3DVertex(-128.0f, 128.0f, 0.0f,0.0f, 1.0f),
-    Sprite3DVertex(128.0f, 128.0f, 0.0f,1.0f, 1.0f))
+    Sprite3DVertex(128.0f, 128.0f, 0.0f,1.0f, 1.0f),
+    UniformsSpriteVertex(),
+    UniformsSpriteFragment())

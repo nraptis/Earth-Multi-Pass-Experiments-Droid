@@ -69,11 +69,16 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         return -1
     }
 
+    fun bufferArrayDelete(index: Int) {
+        val bufferHandle = intArrayOf(index)
+        GLES20.glDeleteBuffers(1, bufferHandle, 0)
+    }
+
     fun bufferArrayWrite(index: Int, size: Int, buffer: Buffer?) {
         if (index != -1) {
             buffer.let { _buffer ->
                 GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, index)
-                GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, size, _buffer, GLES20.GL_DYNAMIC_DRAW)
+                GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, size, _buffer, GLES20.GL_STATIC_DRAW)
             }
         }
     }
@@ -92,15 +97,28 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         }
     }
 
-    fun indexBufferGenerate(array: Array<Int>): IntBuffer {
+    fun bufferIndexGenerate(array: Array<Int>): IntBuffer {
         val result = ByteBuffer.allocateDirect(array.size * Int.SIZE_BYTES)
             .order(ByteOrder.nativeOrder())
             .asIntBuffer()
-        indexBufferWrite(array, result)
+        bufferIndexWrite(array, result)
         return result
     }
 
-    fun indexBufferWrite(array: Array<Int>, intBuffer: IntBuffer?) {
+    fun bufferIndexGenerate(list: List<Int>): IntBuffer {
+        val result = ByteBuffer.allocateDirect(list.size * Int.SIZE_BYTES)
+            .order(ByteOrder.nativeOrder())
+            .asIntBuffer()
+        bufferIndexWrite(list, result)
+        return result
+    }
+
+    fun bufferIndexDelete(index: Int) {
+        val bufferHandle = intArrayOf(index)
+        GLES20.glDeleteBuffers(1, bufferHandle, 0)
+    }
+
+    fun bufferIndexWrite(array: Array<Int>, intBuffer: IntBuffer?) {
 
         // Reset buffer position to the beginning
         intBuffer?.let { _intBuffer ->
@@ -115,15 +133,30 @@ class GraphicsLibrary(activity: GraphicsActivity?,
         }
     }
 
-    fun indexBufferGenerate(array: IntArray): IntBuffer {
+    fun bufferIndexWrite(list: List<Int>, intBuffer: IntBuffer?) {
+
+        // Reset buffer position to the beginning
+        intBuffer?.let { _intBuffer ->
+            _intBuffer.position(0)
+
+            for (element in list) {
+                _intBuffer.put(element)
+            }
+
+            // Reset buffer position to the beginning
+            _intBuffer.position(0)
+        }
+    }
+
+    fun bufferIndexGenerate(array: IntArray): IntBuffer {
         val result = ByteBuffer.allocateDirect(array.size * Int.SIZE_BYTES)
             .order(ByteOrder.nativeOrder())
             .asIntBuffer()
-        indexBufferWrite(array, result)
+        bufferIndexWrite(array, result)
         return result
     }
 
-    fun indexBufferWrite(array: IntArray, intBuffer: IntBuffer?) {
+    fun bufferIndexWrite(array: IntArray, intBuffer: IntBuffer?) {
         // Reset buffer position to the beginning
         intBuffer?.let { _intBuffer ->
             _intBuffer.position(0)
