@@ -19,9 +19,6 @@ class Earth(var context: Context?,
     var lightMap: Sprite? = null
 
     init {
-        //this.graphics = graphics
-        //this.graphicsPipeline = graphicsPipeline
-
         earthModelDataStrips = Array<EarthModelDataStrip>(Earth.tileCountV) {
             EarthModelDataStrip(context, it + 1, graphics, graphicsPipeline)
         }
@@ -35,12 +32,10 @@ class Earth(var context: Context?,
         width: Int,
         height: Int
     ) {
-
         this.earthMap = earthMap
         this.lightMap = lightMap
         this.width = width.toFloat()
         this.height = height.toFloat()
-
         for (earthModelDataStrip in earthModelDataStrips) {
             earthModelDataStrip.load(graphics, earthMap, lightMap)
         }
@@ -71,5 +66,4 @@ class Earth(var context: Context?,
             earthModelDataStrip.draw3D(width, height)
         }
     }
-
 }

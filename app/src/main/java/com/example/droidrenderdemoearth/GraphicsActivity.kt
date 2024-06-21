@@ -7,11 +7,15 @@ import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.View
+import android.graphics.Color
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 
 class GraphicsActivity : Activity() {
 
@@ -41,15 +45,15 @@ class GraphicsActivity : Activity() {
         super.onCreate(savedInstanceState)
 
         // Create a LinearLayout to contain the SeekBars, RadioGroup, and GLSurfaceView
-        val mainLayout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        val mainLayout = ConstraintLayout(this).apply {
+            setBackgroundColor(Color.RED)
+            id = View.generateViewId()  // Assign an ID for later use in constraints
         }
 
         // Create the SeekBar for the top slider (sliderA)
         val sliderA = SeekBar(this).apply {
             max = 5
-            id = R.id.seekA
+            id = View.generateViewId()
             setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     Log.d("GraphicsActivity", "Slider A value: $progress")
@@ -67,22 +71,25 @@ class GraphicsActivity : Activity() {
 
         // Create the RadioGroup for the segmented picker
         val segmentedPicker = RadioGroup(this).apply {
+
+            id = View.generateViewId()
+            setBackgroundColor(Color.BLUE)
             orientation = RadioGroup.HORIZONTAL
             gravity = Gravity.CENTER_HORIZONTAL
 
             val radioA = RadioButton(this@GraphicsActivity).apply {
                 text = "a"
-                id = R.id.radioA
+                id = View.generateViewId()
             }
 
             val radioB = RadioButton(this@GraphicsActivity).apply {
                 text = "b"
-                id = R.id.radioB
+                id = View.generateViewId()
             }
 
             val radioC = RadioButton(this@GraphicsActivity).apply {
                 text = "c"
-                id = R.id.radioC
+                id = View.generateViewId()
             }
 
             addView(radioA)
@@ -99,12 +106,14 @@ class GraphicsActivity : Activity() {
         }
 
         // Create the GLSurfaceView
-        gLView = GraphicsSurfaceView(this)
+        gLView = GraphicsSurfaceView(this).apply {
+            id = View.generateViewId()
+        }
 
         // Create the SeekBar for the bottom slider (sliderB)
         val sliderB = SeekBar(this).apply {
+            id = View.generateViewId()
             max = 16
-            id = R.id.seekB
             setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     Log.d("GraphicsActivity", "Slider B value: $progress")
@@ -121,14 +130,46 @@ class GraphicsActivity : Activity() {
         }
 
         // Add the SeekBar (sliderA), RadioGroup, GLSurfaceView, and another SeekBar (sliderB) to the main layout
-        mainLayout.addView(sliderA)
+        //mainLayout.addView(sliderA)
+
+        mainLayout.addView(gLView)
+
         mainLayout.addView(segmentedPicker)
-        mainLayout.addView(gLView, LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            0,
-            1.0f
-        ))
-        mainLayout.addView(sliderB)
+
+        //mainLayout.addView(sliderB)
+
+
+        val constraintSet = ConstraintSet().apply {
+
+            // Constrain height to be exactly 64dp
+            constrainHeight(segmentedPicker.id, 120)
+
+            // Constrain width to be at most 420dp, or match parent if less than 420dp
+            constrainMaxWidth(segmentedPicker.id, 420)
+
+            // Connect top, start, end to parent with margins
+            connect(segmentedPicker.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 16)
+            connect(segmentedPicker.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 16)
+            connect(segmentedPicker.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 16)
+
+
+            connect(gLView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 16)
+            connect(gLView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 16)
+            connect(gLView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 16)
+            connect(gLView.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 16)
+        }
+        constraintSet.applyTo(mainLayout)
+
+        /*
+        val constraintSet = ConstraintSet().apply {
+            //clone(mainLayout)
+            connect(gLView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 16)
+            connect(gLView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 16)
+            connect(gLView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 16)
+            connect(gLView.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 16)
+        }
+        constraintSet.applyTo(mainLayout)
+        */
 
         // Set the main layout as the content view
         setContentView(mainLayout)
