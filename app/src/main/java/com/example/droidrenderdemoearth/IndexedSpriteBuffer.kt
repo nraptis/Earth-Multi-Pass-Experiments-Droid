@@ -16,10 +16,7 @@ open class IndexedSpriteBuffer<NodeType>(
 
     override fun link(shaderProgram: ShaderProgram?) {
         // Implementation for linking shader program
-        graphics?.let { _graphics ->
-            _graphics.uniformsTextureSet(shaderProgram, sprite)
-            println("ISB Render Sprite" + sprite)
-        }
+        graphics?.uniformsTextureSet(shaderProgram, sprite)
     }
 
 }

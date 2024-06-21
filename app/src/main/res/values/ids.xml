@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="radioA" type="id" />
+    <item name="radioB" type="id" />
+    <item name="radioC" type="id" />
+
+    <item name="seekA" type="id" />
+    <item name="seekB" type="id" />
+
+
+
+</resources>

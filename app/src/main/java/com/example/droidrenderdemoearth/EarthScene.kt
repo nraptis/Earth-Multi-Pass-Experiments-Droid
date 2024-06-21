@@ -1,7 +1,6 @@
 package com.example.droidrenderdemoearth
 
 import android.content.Context
-import java.nio.IntBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import kotlin.random.Random
 
@@ -53,7 +52,7 @@ class EarthScene(
         lightMap.load(graphics, lightMapTexture)
 
 
-        earth?.load(graphics, graphicsPipeline, earthMap, lightMap)
+        earth?.load(graphics, graphicsPipeline, earthMap, lightMap, width, height)
 
         /*
         galaxyInstance.load(graphics, galaxyMap)

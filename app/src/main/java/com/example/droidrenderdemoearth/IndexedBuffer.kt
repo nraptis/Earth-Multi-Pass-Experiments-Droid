@@ -49,15 +49,8 @@ open class IndexedBuffer<NodeType>(
         // Implementation for rendering
         graphics?.let { _graphics ->
 
-            print("ISB indexCount = " + indexCount)
-            print("ISB vertexCount = " + vertexCount)
-
-
             if (indexCount <= 0) { return }
             if (vertexCount <= 0) { return }
-
-            print("ISB isVertexBufferDirty = " + isVertexBufferDirty)
-            print("ISB isIndexBufferDirty = " + isIndexBufferDirty)
 
             if (isVertexBufferDirty) {
                 writeVertexBuffer()
@@ -70,14 +63,9 @@ open class IndexedBuffer<NodeType>(
             }
 
             vertexBuffer?.let { _vertexBuffer ->
-                print("ISB _vertexBuffer alive...")
                 indexBuffer?.let { _indexBuffer ->
 
-                    print("ISB _indexBuffer alive...")
-
                     _graphics.linkBufferToShaderProgram(shaderProgram, vertexBufferIndex)
-
-                    //_graphics.uniformsTextureSet(shaderProgram, sprite)
 
                     link(shaderProgram)
 
@@ -89,7 +77,5 @@ open class IndexedBuffer<NodeType>(
                 }
             }
         }
-
     }
-
 }

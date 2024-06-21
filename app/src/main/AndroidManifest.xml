@@ -15,7 +15,7 @@
         android:theme="@style/Theme.DroidRenderDemoEarth"
         tools:targetApi="31">
         <activity
-            android:name=".GraphicsActivity"
+            android:name="GraphicsActivity"
             android:exported="true"
             android:label="Earth Demo">
             <intent-filter>

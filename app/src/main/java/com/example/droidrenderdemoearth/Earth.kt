@@ -27,12 +27,20 @@ class Earth(var context: Context?,
         }
     }
 
-    fun load(graphics: GraphicsLibrary?,
-             graphicsPipeline: GraphicsPipeline?,
-             earthMap: Sprite,
-             lightMap: Sprite) {
+    fun load(
+        graphics: GraphicsLibrary?,
+        graphicsPipeline: GraphicsPipeline?,
+        earthMap: Sprite,
+        lightMap: Sprite,
+        width: Int,
+        height: Int
+    ) {
+
         this.earthMap = earthMap
         this.lightMap = lightMap
+        this.width = width.toFloat()
+        this.height = height.toFloat()
+
         for (earthModelDataStrip in earthModelDataStrips) {
             earthModelDataStrip.load(graphics, earthMap, lightMap)
         }

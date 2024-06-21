@@ -47,6 +47,10 @@ class EarthModelDataStrip( var context: Context?,
     fun updateStereo(radians: Float, width: Float, height: Float, stereoSpreadBase: Float, stereoSpreadMax: Float, ticksConsumed: Int) {
 
 
+        println("width = " + width)
+        println("height = " + height)
+
+
         val radius: Float = if (GraphicsActivity.isTablet(context)) {
             minOf(width, height) * (0.5f * 0.75f)
         } else {
