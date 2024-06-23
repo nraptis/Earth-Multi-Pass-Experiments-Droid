@@ -14,10 +14,13 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ComposeView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.lifecycle.LifecycleOwner
 
-class GraphicsActivity : Activity() {
+class GraphicsActivity : AppCompatActivity() {
 
     private lateinit var gLView: GLSurfaceView
 
@@ -48,6 +51,26 @@ class GraphicsActivity : Activity() {
         val mainLayout = ConstraintLayout(this).apply {
             setBackgroundColor(Color.RED)
             id = View.generateViewId()  // Assign an ID for later use in constraints
+        }
+
+// Attach LifecycleOwner to ConstraintLayout
+        //ViewTreeLifecycleOwner.set(mainLayout, this as LifecycleOwner)
+
+        // Create a ComposeView to host the SegmentedControl
+        val composeView = ComposeView(this).apply {
+            id = View.generateViewId()
+            setContent {
+                SegmentedControl(
+                    items = listOf("a", "b", "c"),
+                    onItemSelection = { index ->
+                        when (index) {
+                            0 -> onOptionAClicked()
+                            1 -> onOptionBClicked()
+                            2 -> onOptionCClicked()
+                        }
+                    }
+                )
+            }
         }
 
         // Create the SeekBar for the top slider (sliderA)
@@ -134,7 +157,7 @@ class GraphicsActivity : Activity() {
 
         mainLayout.addView(gLView)
 
-        mainLayout.addView(segmentedPicker)
+        mainLayout.addView(composeView)
 
         //mainLayout.addView(sliderB)
 
@@ -142,15 +165,15 @@ class GraphicsActivity : Activity() {
         val constraintSet = ConstraintSet().apply {
 
             // Constrain height to be exactly 64dp
-            constrainHeight(segmentedPicker.id, 120)
+            constrainHeight(composeView.id, 120)
 
             // Constrain width to be at most 420dp, or match parent if less than 420dp
-            constrainMaxWidth(segmentedPicker.id, 420)
+            constrainMaxWidth(composeView.id, 420)
 
             // Connect top, start, end to parent with margins
-            connect(segmentedPicker.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 16)
-            connect(segmentedPicker.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 16)
-            connect(segmentedPicker.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 16)
+            connect(composeView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 16)
+            connect(composeView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 16)
+            connect(composeView.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 16)
 
 
             connect(gLView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 16)
